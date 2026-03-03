@@ -1,0 +1,42 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        background: "#0c0a09", // Warm black
+        surface: "#1c1917", // Stone 900
+        card: "#292524", // Stone 800
+        accent: {
+          DEFAULT: "#f59e0b", // Amber 500
+          hover: "#d97706", // Amber 600
+        },
+        human: {
+          terracotta: "#c2410c",
+          clay: "#9a3412",
+          cream: "#fafaf9",
+        },
+      },
+      fontFamily: {
+        sans: ['"Inter"', "system-ui", "sans-serif"],
+        display: ['"Outfit"', "system-ui", "sans-serif"],
+      },
+      animation: {
+        "gradient-x": "gradient-x 15s ease infinite",
+      },
+      keyframes: {
+        "gradient-x": {
+          "0%, 100%": {
+            "background-size": "200% 200%",
+            "background-position": "left center",
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "right center",
+          },
+        },
+      },
+    },
+  },
+  plugins: [],
+};

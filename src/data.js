@@ -1,0 +1,38 @@
+export const projects = [
+  {
+    id: 1,
+    title: "Terakins Global",
+    tags: ["web", "html", "css", "react", "tailwind", "framer-motion"],
+    desc: "Terakins Global is a web application that provides a platform for users to access information about Terakins Global. It features a modern, user-friendly interface with a focus on performance and accessibility.",
+    image: "/projects/zoboexensions.png",
+    live: "https://terakinsglobal.vercel.app/",
+    code: "https://github.com/Donvictory/terakinsglobal",
+  },
+  {
+    id: 2,
+    title: "Browser Extension",
+    tags: ["html", "css", "javascript"],
+    desc: "A browser extension that provides a seamless user experience.",
+    image: "/projects/fem challenge.png",
+    live: "https://fem-challenge.vercel.app/",
+    code: "https://github.com/Donvictory/fem-challenge",
+  },
+  {
+    id: 3,
+    title: "Naija Tax",
+    tags: ["html", "css", "javascript"],
+    desc: "An interactive product grid designed with modern e-commerce UX in mind. Implements complex filtering logic, local state persistence, and a seamless modal-based detail view for a frictionless user journey.",
+    image: "/projects/naija-tax.png",
+    live: "https://naija-tax-siit.vercel.app/",
+    code: "https://github.com/Donvictory/naija-tax",
+  },
+  {
+    id: 4,
+    title: "DriftCare NG",
+    tags: ["react", "framer-motion", "tailwind"],
+    desc: "DriftCare NG is an AI-powered preventive health drift monitor built for Nigeria. We detect behavioral and symptom drift from your personal health baseline — and alert you to consult a doctor before conditions become emergencies.",
+    image: "/projects/drift-care.png",
+    live: "https://driftcare.vercel.app/",
+    code: "https://github.com/Donvictory/driftcare-ng",
+  },
+];
