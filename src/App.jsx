@@ -19,6 +19,7 @@ import { projects } from "./data";
 import Sidebar from "./components/Sidebar";
 import ProjectCard from "./components/ProjectCard";
 import ProjectModal from "./components/ProjectModal";
+import profilePic from "../public/projects/about-pic.jpeg";
 
 const TypewriterText = ({ text, delay = 0, onComplete, className }) => {
   const words = text.split(" ");
@@ -205,7 +206,7 @@ function App() {
 
         <div className="flex items-center gap-4">
           <a
-            href="/resume.html"
+            href="/cv.html"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden lg:flex btn-human btn-human-secondary py-2 px-6 !text-[9px]"
@@ -286,11 +287,11 @@ function App() {
                       Projects <ChevronRight size={16} />
                     </a>
                     <a
-                      href="/resume.pdf"
+                      href="/cv.pdf"
                       download
                       className="btn-human btn-human-secondary min-w-[170px]"
                     >
-                      Resume <FileDown size={16} />
+                      CV <FileDown size={16} />
                     </a>
                   </motion.div>
                 )}
@@ -442,10 +443,8 @@ function App() {
           </div>
         </section>
 
-        {/* ABOUT */}
         <section id="about" ref={sectionRefs.about} className="py-20 lg:py-40">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            {/* Image Column */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -455,7 +454,7 @@ function App() {
               <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/10 group shadow-2xl">
                 <div className="absolute inset-0 bg-accent/20 group-hover:bg-transparent transition-colors duration-700 z-10" />
                 <img
-                  src="/profile.jpg"
+                  src={profilePic}
                   alt="Donvictory Adewumi"
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-[1.5s] scale-110 group-hover:scale-100"
                 />
@@ -463,7 +462,6 @@ function App() {
               </div>
             </motion.div>
 
-            {/* Narrative Column */}
             <div className="lg:col-span-7 space-y-12">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -603,13 +601,13 @@ function App() {
 
               <div className="space-y-8 lg:pl-12 lg:border-l border-white/5">
                 <p className="text-stone-400 font-medium italic">
-                  Available for collaborations that prioritize quality, empathy,
-                  and structural clarity.
+                  Seeking collaborative opportunities grounded in excellence,
+                  thoughtful design, and clear structure.
                 </p>
 
                 <div className="flex flex-col gap-4">
                   <a
-                    href="https://twitter.com/yourhandle"
+                    href="https://twitter.com/don_of_victory"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between p-6 rounded-[2rem] bg-accent/10 border border-accent/20 hover:bg-accent hover:text-portfolio-bg transition-all group"
@@ -653,7 +651,7 @@ function App() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                   <a
-                    href="https://linkedin.com/in/donvictoryadewumi"
+                    href="https://www.linkedin.com/in/oluwasegun-donvictory-b27a87221?trk=contact-info"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/30 transition-all group"
@@ -695,8 +693,9 @@ function App() {
                 DA.
               </div>
               <p className="text-stone-500 text-sm leading-relaxed max-w-sm">
-                Engineering digital products with mathematical precision and
-                human empathy. Based in Lagos, available worldwide.
+                Building reliable, scalable digital systems with strategic
+                clarity and customer insight. Based in Lagos, Nigeria, Available
+                worldwide.
               </p>
               <div className="flex gap-4">
                 <a
