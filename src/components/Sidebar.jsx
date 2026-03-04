@@ -95,8 +95,9 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
 
                 <div className="pt-8 border-t border-white/5">
                   <a
-                    href="/resume.pdf"
-                    download
+                    href="/resume.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-3 text-stone-400 hover:text-accent transition-colors font-bold tracking-[0.1em] uppercase text-[10px]"
                   >
                     <FileDown size={16} /> Download Curriculum Vitae

@@ -14,7 +14,7 @@ export const projects = [
     tags: ["html", "css", "javascript"],
     desc: "A browser extension that provides a seamless user experience.",
     image: "/projects/fem challenge.png",
-    live: "https://fem-challenge.vercel.app/",
+    live: "https://fem-browser-extensions.vercel.app/",
     code: "https://github.com/Donvictory/fem-challenge",
   },
   {
