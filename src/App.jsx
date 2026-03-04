@@ -179,7 +179,6 @@ function App() {
         style={{ scaleX }}
       />
 
-      {/* Modern Top Nav */}
       <nav className="fixed top-0 w-full p-6 lg:px-12 lg:py-8 flex justify-between items-center z-50">
         <motion.h2
           initial={{ opacity: 0, x: -20 }}
@@ -189,7 +188,6 @@ function App() {
           DA.
         </motion.h2>
 
-        {/* Desktop Nav Contents */}
         <div className="hidden lg:flex items-center gap-10 bg-white/5 backdrop-blur-xl border border-white/10 px-8 py-3 rounded-2xl">
           {navItems.map((item) => (
             <a
@@ -232,7 +230,6 @@ function App() {
       />
 
       <main className="max-w-6xl mx-auto px-6 lg:px-0">
-        {/* HERO SECTION */}
         <section
           id="intro"
           ref={sectionRefs.intro}
@@ -316,7 +313,6 @@ function App() {
           </motion.div>
         </section>
 
-        {/* EXPERTISE */}
         <section id="expertise" ref={sectionRefs.expertise} className="py-32">
           <motion.div
             variants={containerVariants}
@@ -401,7 +397,6 @@ function App() {
           </motion.div>
         </section>
 
-        {/* PROJECTS */}
         <section id="works" ref={sectionRefs.works} className="py-32">
           <div className="space-y-20">
             <div className="flex flex-col items-center text-center space-y-6">
@@ -479,7 +474,6 @@ function App() {
                   </h3>
                 </div>
 
-                {/* Academic Context - Integrated */}
                 <div className="flex items-center gap-6 p-1">
                   <div className="h-px w-12 bg-accent/30" />
                   <div className="flex flex-col">
@@ -542,7 +536,6 @@ function App() {
           </div>
         </section>
 
-        {/* CONTACT */}
         <section
           id="connect"
           ref={sectionRefs.connect}
@@ -628,7 +621,7 @@ function App() {
                   </a>
 
                   <a
-                    href="https://wa.me/2348136344061"
+                    href="https://wa.me/2349091735644"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between p-6 rounded-[2rem] bg-white/5 border border-white/10 hover:border-accent/40 hover:bg-white/10 transition-all group"
@@ -639,7 +632,7 @@ function App() {
                         className="text-[#25D366] group-hover:scale-110 transition-transform"
                       />
                       <span className="font-bold uppercase tracking-widest text-[11px] text-stone-300 group-hover:text-cream transition-colors">
-                        Message WhatsApp
+                        Message on WhatsApp
                       </span>
                     </div>
                     <ChevronRight

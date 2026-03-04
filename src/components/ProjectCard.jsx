@@ -11,7 +11,6 @@ const ProjectCard = ({ project, onClick }) => {
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
       className="group relative glass-card p-0"
     >
-      {/* Project Image Preview with limited overflow */}
       <div className="relative h-64 w-full overflow-hidden rounded-t-[2rem] bg-stone-900 border-b border-white/5">
         <motion.img
           src={project.image}
@@ -21,7 +20,6 @@ const ProjectCard = ({ project, onClick }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-portfolio-bg/80 via-transparent to-transparent pointer-events-none" />
       </div>
 
-      {/* Content Section */}
       <div className="relative z-10 p-8 flex flex-col gap-6">
         <div className="flex flex-wrap gap-2">
           {project.tags.map((tag) => (
@@ -43,7 +41,6 @@ const ProjectCard = ({ project, onClick }) => {
           </p>
         </div>
 
-        {/* Action Footer - ALWAYS VISIBLE */}
         <div className="pt-6 border-t border-white/5 space-y-4">
           <div className="flex flex-row gap-3">
             {project.live && (

@@ -7,7 +7,6 @@ const ProjectModal = ({ project, onClose }) => {
     <AnimatePresence>
       {project && (
         <div className="fixed inset-0 z-[130] flex items-center justify-center p-6 lg:p-12 overflow-hidden">
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -16,7 +15,6 @@ const ProjectModal = ({ project, onClose }) => {
             className="absolute inset-0 bg-portfolio-bg/90 backdrop-blur-2xl"
           />
 
-          {/* Modal Content */}
           <motion.div
             initial={{ opacity: 0, scale: 0.98, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -37,7 +35,6 @@ const ProjectModal = ({ project, onClose }) => {
             </button>
 
             <div className="overflow-y-auto w-full">
-              {/* Feature Image Header */}
               <div className="w-full h-80 lg:h-[450px] overflow-hidden relative border-b border-white/5 bg-stone-900">
                 <img
                   src={project.image}

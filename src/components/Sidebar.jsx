@@ -32,7 +32,6 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[120] overflow-hidden">
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -41,7 +40,6 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
             className="absolute inset-0 bg-stone-950/80 backdrop-blur-3xl"
           />
 
-          {/* Sidebar Drawer */}
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
