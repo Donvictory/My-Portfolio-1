@@ -205,8 +205,9 @@ function App() {
 
         <div className="flex items-center gap-4">
           <a
-            href="/resume.pdf"
-            download
+            href="/resume.html"
+            target="_blank"
+            rel="noopener noreferrer"
             className="hidden lg:flex btn-human btn-human-secondary py-2 px-6 !text-[9px]"
           >
             CV <FileDown size={14} className="ml-2" />
