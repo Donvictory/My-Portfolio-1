@@ -13,6 +13,13 @@ import {
   Twitter,
   MessageCircle,
   Terminal,
+  Layout,
+  Globe,
+  Cpu,
+  Layers,
+  Copy,
+  Check,
+  ArrowUp,
 } from "lucide-react";
 import "./index.css";
 import { projects } from "./data";
@@ -78,6 +85,7 @@ const TypewriterText = ({ text, delay = 0, onComplete, className }) => {
               custom={word.spaceIndex}
               variants={child}
               initial="hidden"
+              z
               animate="visible"
               onAnimationComplete={
                 word.spaceIndex === totalChars - 1 ? onComplete : undefined
@@ -99,6 +107,8 @@ function App() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeSection, setActiveSection] = useState("intro");
   const [showHeroButtons, setShowHeroButtons] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -117,11 +127,15 @@ function App() {
     works: useRef(null),
     about: useRef(null),
     connect: useRef(null),
+    approach: useRef(null),
+    experience: useRef(null),
   };
 
   const navItems = [
     { id: "intro", label: "Home" },
     { id: "expertise", label: "Expertise" },
+    { id: "approach", label: "Method" },
+    { id: "experience", label: "Experience" },
     { id: "works", label: "Projects" },
     { id: "about", label: "About Me" },
     { id: "connect", label: "Contact" },
@@ -148,6 +162,20 @@ function App() {
 
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 1000);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText("donvictoryadewumi4@gmail.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -284,11 +312,12 @@ function App() {
                       Projects <ChevronRight size={16} />
                     </a>
                     <a
-                      href="/cv.pdf"
-                      download
+                      href="/cv.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="btn-human btn-human-secondary min-w-[170px]"
                     >
-                      CV <FileDown size={16} />
+                      Resume <FileDown size={16} />
                     </a>
                   </motion.div>
                 )}
@@ -313,6 +342,32 @@ function App() {
           </motion.div>
         </section>
 
+        <section className="py-24 border-y border-white/5 relative overflow-hidden">
+          <div className="absolute inset-0 bg-white/[0.01]" />
+          <div className="max-w-6xl mx-auto px-6 relative z-10">
+            <p className="text-[10px] font-bold tracking-[0.4em] text-stone-700 uppercase text-center mb-12">
+              Technical Stack & Strategic Tools
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-20 grayscale hover:grayscale-0 hover:opacity-50 transition-all duration-700">
+              {[
+                "React",
+                "Next.js",
+                "Tailwind",
+                "Figma",
+                "Vercel",
+                "GitHub",
+              ].map((tech) => (
+                <span
+                  key={tech}
+                  className="text-2xl md:text-4xl font-black font-display tracking-tighter text-cream"
+                >
+                  {tech.toUpperCase()}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section id="expertise" ref={sectionRefs.expertise} className="py-32">
           <motion.div
             variants={containerVariants}
@@ -333,41 +388,38 @@ function App() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
                 {
-                  title: "Frontend Development",
-                  desc: "• React & modern UI architecture\n• Scalable, reusable components\n• Clean, responsive interfaces",
-                  icon: "🖥",
+                  title: "Frontend Architecture",
+                  desc: "Designing scalable, component-driven systems using React and modern state management. Focused on performance and maintainability.",
+                  icon: <Layout className="text-accent" size={32} />,
                 },
                 {
-                  title: "API Integration",
-                  desc: "• Connecting UI to real data\n• REST APIs, fetch & Axios\n• Structured data flow handling",
-                  icon: "🔗",
+                  title: "Strategic API Design",
+                  desc: "Bridging the gap between complex data and intuitive UI. Expert at implementing clean, reliable API integrations and data flows.",
+                  icon: <Globe className="text-accent" size={32} />,
                 },
                 {
-                  title: "Deployment & Workflow",
-                  desc: "• Vercel & production builds\n• Git-based version control\n• Debugging beyond localhost",
-                  icon: "🚀",
+                  title: "Deployment Strategy",
+                  desc: "Streamlining the path to production with automated workflows, CI/CD pipelines, and high-performance hosting environments.",
+                  icon: <Cpu className="text-accent" size={32} />,
                 },
                 {
-                  title: "Product & System Thinking",
-                  desc: "• User-focused system design\n• Clear workflows & structure\n• Built for real-world impact",
-                  icon: "🧠",
+                  title: "System Thinking",
+                  desc: "Approaching every project as a cohesive ecosystem. I build with the 'big picture' in mind to ensure long-term scalability.",
+                  icon: <Layers className="text-accent" size={32} />,
                 },
               ].map((box, i) => (
                 <motion.div
                   key={i}
                   variants={itemVariants}
-                  className="glass-card group p-10"
+                  className="glass-card group p-10 hover:border-accent/30 transition-all"
                 >
-                  <div
-                    className="text-4xl mb-6 opacity-30 group-hover:opacity-100 transition-all duration-500 animate-float-subtle"
-                    style={{ animationDelay: `${i * 0.4}s` }}
-                  >
+                  <div className="mb-6 opacity-40 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-110">
                     {box.icon}
                   </div>
                   <h4 className="text-xl font-bold font-display text-cream mb-4">
                     {box.title}
                   </h4>
-                  <div className="text-stone-500 text-sm leading-relaxed whitespace-pre-line group-hover:text-stone-400 transition-colors">
+                  <div className="text-stone-500 text-sm leading-relaxed group-hover:text-stone-400 transition-colors">
                     {box.desc}
                   </div>
                 </motion.div>
@@ -395,6 +447,129 @@ function App() {
               ))}
             </div>
           </motion.div>
+        </section>
+
+        <section
+          id="approach"
+          ref={sectionRefs.approach}
+          className="py-32 relative overflow-hidden"
+        >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-accent/5 rounded-full blur-[120px] -z-10" />
+
+          <div className="space-y-20">
+            <div className="text-center space-y-4">
+              <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-60">
+                The Methodology
+              </h2>
+              <h3 className="text-4xl lg:text-6xl font-bold font-display text-cream">
+                My Approach.
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  step: "01",
+                  title: "Strategy First",
+                  desc: "I don't just write code; I look at the problem. We define the 'why' before the 'how' to ensure every pixel serves a purpose.",
+                },
+                {
+                  step: "02",
+                  title: "Intuitive Design",
+                  desc: "Complexity is the enemy of usability. I build interfaces that feel natural, reducing friction and guiding users effortlessly.",
+                },
+                {
+                  step: "03",
+                  title: "Scalable Architecture",
+                  desc: "Using modern tools like React and Tailwind, I create systems that are modular, maintainable, and ready to grow with your vision.",
+                },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.2 }}
+                  className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 hover:border-accent/30 transition-all group"
+                >
+                  <span className="text-6xl font-black font-display text-accent/10 group-hover:text-accent/20 transition-colors block mb-6">
+                    {item.step}
+                  </span>
+                  <h4 className="text-2xl font-bold font-display text-cream mb-4">
+                    {item.title}
+                  </h4>
+                  <p className="text-stone-500 text-sm leading-relaxed group-hover:text-stone-400 transition-colors">
+                    {item.desc}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="experience" ref={sectionRefs.experience} className="py-32">
+          <div className="space-y-20">
+            <div className="text-center space-y-4">
+              <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-60">
+                The Journey
+              </h2>
+              <h3 className="text-4xl lg:text-6xl font-bold font-display text-cream">
+                Experience.
+              </h3>
+            </div>
+
+            <div className="max-w-4xl mx-auto space-y-12">
+              {[
+                {
+                  year: "2024 - Present",
+                  role: "Frontend Engineer (Contract)",
+                  company: "Freelance / Open Source",
+                  desc: "Building high-performance web applications using React, Tailwind, and Framer Motion. Focused on creating intuitive user experiences and scalable frontend architectures for various clients.",
+                },
+                {
+                  year: "2023 - 2024",
+                  role: "Frontend Developer Trainee",
+                  company: "Self-Directed Learning / Community Projects",
+                  desc: "Mastered modern JavaScript frameworks and responsive design principles. Contributed to open-source projects and built a portfolio of mission-driven applications like DriftCare NG and Naija Tax Guide.",
+                },
+                {
+                  year: "2021 - 2025",
+                  role: "B.Sc. Mathematics",
+                  company: "University of Lagos",
+                  desc: "Applied analytical thinking and problem-solving skills to complex mathematical systems. Honed the logical foundation required for advanced software architecture and data structures.",
+                },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="relative pl-12 border-l border-white/5 group"
+                >
+                  <div className="absolute left-[-1px] top-0 h-full w-[1px] bg-gradient-to-b from-accent/50 to-transparent group-hover:from-accent transition-all duration-500" />
+                  <div className="absolute left-[-5px] top-0 w-[9px] h-[9px] rounded-full bg-portfolio-bg border border-accent/50 group-hover:bg-accent transition-colors duration-500" />
+
+                  <div className="space-y-4">
+                    <span className="text-[10px] font-bold text-accent tracking-widest uppercase bg-accent/5 px-3 py-1 rounded-full border border-accent/10">
+                      {item.year}
+                    </span>
+                    <div className="space-y-1">
+                      <h4 className="text-2xl font-bold font-display text-cream">
+                        {item.role}
+                      </h4>
+                      <p className="text-stone-500 font-bold text-sm tracking-wide">
+                        {item.company}
+                      </p>
+                    </div>
+                    <p className="text-stone-400 text-sm leading-relaxed max-w-2xl">
+                      {item.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </section>
 
         <section id="works" ref={sectionRefs.works} className="py-32">
@@ -532,6 +707,24 @@ function App() {
                   Frontend Engineer
                 </div>
               </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="p-8 rounded-[2rem] bg-accent/5 border border-accent/10 space-y-4"
+              >
+                <h4 className="text-xs font-bold tracking-[0.2em] uppercase text-accent">
+                  The Philosophy
+                </h4>
+                <p className="text-stone-400 text-sm italic leading-relaxed">
+                  "I believe that software should be more than just functional;
+                  it should be intuitive, resilient, and built with a deep
+                  understanding of the human problem it aims to solve. My goal
+                  is to bridge the gap between complex logic and seamless user
+                  experience."
+                </p>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -562,22 +755,31 @@ function App() {
                 </p>
 
                 <div className="flex flex-col gap-4">
-                  <a
-                    href="mailto:donvictoryadewumi4@gmail.com"
-                    className="flex items-center gap-4 group"
-                  >
+                  <div className="flex items-center gap-4 group">
                     <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-stone-500 group-hover:text-accent group-hover:border-accent/30 transition-all">
                       <Mail size={20} />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <p className="text-[10px] uppercase tracking-widest text-stone-700 font-bold">
                         Email Me
                       </p>
-                      <p className="text-cream font-bold group-hover:text-accent transition-colors">
-                        donvictoryadewumi4@gmail.com
-                      </p>
+                      <div className="flex items-center gap-3">
+                        <a
+                          href="mailto:donvictoryadewumi4@gmail.com"
+                          className="text-cream font-bold group-hover:text-accent transition-colors"
+                        >
+                          donvictoryadewumi4@gmail.com
+                        </a>
+                        <button
+                          onClick={copyEmail}
+                          className="p-2 rounded-lg bg-white/5 border border-white/10 text-stone-600 hover:text-accent hover:border-accent/30 transition-all"
+                          title="Copy Email"
+                        >
+                          {copied ? <Check size={14} /> : <Copy size={14} />}
+                        </button>
+                      </div>
                     </div>
-                  </a>
+                  </div>
                   <div className="flex items-center gap-4 group">
                     <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-stone-500">
                       <MapPin size={20} />
@@ -759,9 +961,9 @@ function App() {
               © 2025 Donvictory Adewumi • All Rights Reserved
             </div>
             <div className="text-[9px] font-bold tracking-[0.4em] text-stone-800 uppercase flex gap-6">
-              <span>Privacy</span>
-              <span>Terms</span>
-              <span>Lagos, NG</span>
+              <span>Strategize</span>
+              <span>Design</span>
+              <span>Build</span>
             </div>
           </div>
         </footer>
@@ -771,6 +973,23 @@ function App() {
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
       />
+
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="fixed bottom-10 right-10 w-14 h-14 rounded-2xl bg-accent text-portfolio-bg flex items-center justify-center shadow-2xl z-[100] hover:scale-110 transition-transform group"
+          >
+            <ArrowUp
+              size={24}
+              className="group-hover:-translate-y-1 transition-transform"
+            />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

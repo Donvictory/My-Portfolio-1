@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Donvictory Adewumi - Resume</title>
+    <title>Donvictory Adewumi - CV</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,8 +16,8 @@
         theme: {
           extend: {
             colors: {
-              "cv-sidebar": "#3e5871",
-              "cv-accent": "#3e5871",
+              "cv-sidebar": "#2d3436",
+              "cv-accent": "#0984e3",
             },
             fontFamily: {
               sans: ["Inter", "sans-serif"],
@@ -31,6 +31,8 @@
       @media print {
         body {
           -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          background-color: white !important;
         }
         .no-print {
           display: none;
@@ -39,361 +41,272 @@
           size: A4;
           margin: 0;
         }
+        .cv-container {
+          box-shadow: none !important;
+          max-width: 100% !important;
+          height: 296mm !important;
+          overflow: hidden !important;
+        }
       }
       .sidebar {
-        min-height: 297mm;
-      }
-      .main-content {
-        min-height: 297mm;
-      }
-      .diagonal-bg {
-        background: linear-gradient(
-          135deg,
-          #3e5871 0%,
-          #3e5871 50%,
-          transparent 50.1%
-        );
-        width: 100px;
-        height: 100px;
-        position: absolute;
-        top: 0;
-        right: 0;
+        height: 297mm;
       }
     </style>
   </head>
   <body class="bg-gray-100 font-sans text-gray-800">
-    <!-- Action Button for Web View -->
     <div class="no-print fixed bottom-8 right-8 z-50">
       <button
         onclick="window.print()"
         class="bg-cv-accent text-white px-6 py-3 rounded-full shadow-2xl hover:scale-105 transition-transform font-bold uppercase tracking-widest text-xs"
       >
-        Download PDF / Print
+        Print / Save PDF
       </button>
     </div>
 
     <div
-      class="max-w-[210mm] mx-auto bg-white shadow-2xl flex overflow-hidden relative"
+      class="cv-container max-w-[210mm] mx-auto bg-white shadow-2xl flex overflow-hidden relative"
     >
-      <div class="diagonal-bg"></div>
-
       <!-- Sidebar -->
       <aside
-        class="w-[35%] bg-cv-sidebar text-white p-10 flex flex-col gap-12 sidebar"
+        class="w-[30%] bg-cv-sidebar text-white py-4 px-5 flex flex-col gap-4 sidebar"
       >
-        <!-- Contact -->
         <section>
-          <div class="bg-white/10 p-2 mb-6 rounded-tr-3xl">
-            <h2 class="text-xs font-black tracking-[0.3em] uppercase pl-2">
+          <div class="border-b border-white/10 pb-1 mb-2">
+            <h2 class="text-[10px] font-black tracking-[0.2em] uppercase">
               Contact
             </h2>
           </div>
-          <ul
-            class="space-y-4 text-[10px] sm:text-[11px] font-medium text-gray-200"
-          >
-            <li class="flex items-center gap-3">
-              <svg
-                class="w-4 h-4 text-white/50"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
-                />
-              </svg>
-              +234 813 634 4061
+          <ul class="space-y-2 text-[10px] font-medium text-gray-300">
+            <li class="flex items-center gap-2">
+              <span class="opacity-50 text-[8px]">TEL:</span> +234 909 173 5644
             </li>
-            <li class="flex items-center gap-3">
-              <svg
-                class="w-4 h-4 text-white/50"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
-                />
-              </svg>
+            <li class="flex items-center gap-2">
+              <span class="opacity-50 text-[8px]">MAIL:</span>
               donvictoryadewumi4@gmail.com
             </li>
-            <li class="flex items-center gap-3">
-              <svg
-                class="w-4 h-4 text-white/50"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-                />
-              </svg>
-              Lagos, Nigeria
+            <li class="flex items-center gap-2">
+              <span class="opacity-50 text-[8px]">LOC:</span> Lagos, Nigeria
             </li>
-            <li class="flex items-center gap-3">
-              <svg
-                class="w-4 h-4 text-white/50"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
-                />
-              </svg>
-              donvictory.vercel.app
+            <li class="flex items-center gap-2">
+              <span class="opacity-50 text-[8px]">WEB:</span>
+              https://my-portfolio-1-don.vercel.app/
             </li>
-            <li class="flex items-center gap-3">
-              <svg
-                class="w-4 h-4 text-white/50"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12 .3a12.1 12.1 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.2 1.9 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.3-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12.1 12.1 0 0 0 12 .3z"
-                />
-              </svg>
+            <li class="flex items-center gap-2">
+              <span class="opacity-50 text-[8px]">GIT:</span>
               github.com/donvictory
             </li>
           </ul>
         </section>
 
-        <!-- Skills -->
         <section>
-          <div class="bg-white/10 p-2 mb-6 rounded-tr-3xl">
-            <h2 class="text-xs font-black tracking-[0.3em] uppercase pl-2">
-              Skills
+          <div class="border-b border-white/10 pb-1 mb-2">
+            <h2 class="text-[10px] font-black tracking-[0.2em] uppercase">
+              Core Skills
             </h2>
           </div>
-          <div class="space-y-6">
+          <div class="space-y-4">
             <div>
-              <h3
-                class="text-[9px] font-black uppercase tracking-widest text-white/40 mb-3"
-              >
+              <h3 class="text-[9px] font-black uppercase text-white/40 mb-2">
                 Frontend
               </h3>
-              <ul class="space-y-2 text-[10px] text-gray-200">
-                <li>• React & Redux</li>
-                <li>• JavaScript (ES6+)</li>
-                <li>• Tailwind CSS & CSS3</li>
-                <li>• Vite & Webpack</li>
+              <ul class="space-y-1 text-[9px] text-gray-300">
+                <li>• React, Next.js, Redux</li>
+                <li>• JavaScript (ES6+), TypeScript</li>
+                <li>• Tailwind CSS, Framer Motion</li>
+                <li>• Vite, Webpack, NPM/Yarn</li>
               </ul>
             </div>
             <div>
-              <h3
-                class="text-[9px] font-black uppercase tracking-widest text-white/40 mb-3"
-              >
-                Data & Workflow
+              <h3 class="text-[9px] font-black uppercase text-white/40 mb-2">
+                Workflow
               </h3>
-              <ul class="space-y-2 text-[10px] text-gray-200">
-                <li>• REST APIs (Axios)</li>
-                <li>• Git & Version Control</li>
-                <li>• Vercel Deployment</li>
-                <li>• Chrome DevTools</li>
+              <ul class="space-y-1 text-[9px] text-gray-300">
+                <li>• REST & GraphQL Integration</li>
+                <li>• Git, GitHub Actions, CI/CD</li>
+                <li>• Vercel, Netlify, AWS</li>
+                <li>• Figma to Code, UI/UX Design</li>
               </ul>
             </div>
           </div>
         </section>
 
-        <!-- Languages -->
         <section>
-          <div class="bg-white/10 p-2 mb-6 rounded-tr-3xl">
-            <h2 class="text-xs font-black tracking-[0.3em] uppercase pl-2">
+          <div class="border-b border-white/10 pb-1 mb-2">
+            <h2 class="text-[10px] font-black tracking-[0.2em] uppercase">
+              Education
+            </h2>
+          </div>
+          <div class="space-y-2">
+            <h3 class="text-[10px] font-bold text-white">B.Sc. Mathematics</h3>
+            <p class="text-[9px] text-gray-400">University of Lagos</p>
+            <p class="text-[8px] text-gray-500 italic">2021 — 2025</p>
+          </div>
+        </section>
+
+        <section>
+          <div class="border-b border-white/10 pb-1 mb-2">
+            <h2 class="text-[10px] font-black tracking-[0.2em] uppercase">
               Languages
             </h2>
           </div>
-          <ul class="space-y-2 text-[10px] text-gray-200">
+          <ul class="space-y-1 text-[10px] text-gray-300">
             <li>• English (Fluent)</li>
-            <li>• Yoruba (Conversational)</li>
+            <li>• Yoruba (Native)</li>
           </ul>
         </section>
 
         <div
-          class="mt-auto pt-10 text-[8px] text-white/20 font-bold uppercase tracking-widest"
+          class="mt-auto pt-4 text-[8px] text-white/20 font-bold uppercase tracking-widest"
         >
-          © 2025 Donvictory Adewumi
+          © 2025 DONVICTORY
         </div>
       </aside>
 
       <!-- Main Content -->
-      <main class="flex-1 p-14 main-content">
-        <!-- Header -->
-        <header class="mb-14">
+      <main class="flex-1 py-4 px-8 flex flex-col gap-4">
+        <header class="mb-3">
           <h1
-            class="text-5xl font-black font-display text-cv-sidebar tracking-tighter mb-2"
+            class="text-3xl font-black font-display text-cv-sidebar tracking-tighter uppercase leading-none"
           >
-            DONVICTORY<br />ADEWUMI
+            Donvictory<br /><span class="text-cv-accent">Adewumi</span>
           </h1>
-          <p class="text-xl italic font-display text-cv-sidebar font-medium">
-            Frontend Developer
+          <p
+            class="text-[11px] tracking-widest uppercase font-bold text-gray-400 mt-1"
+          >
+            Frontend Engineer & UI Designer
           </p>
         </header>
 
-        <!-- About Me -->
-        <section class="mb-12">
-          <div
-            class="bg-cv-sidebar/5 border-l-4 border-cv-sidebar p-2 mb-6 rounded-r-xl"
-          >
+        <section>
+          <div class="flex items-center gap-4 mb-2">
             <h2
-              class="text-xs font-black tracking-[0.3em] uppercase pl-2 text-cv-sidebar"
+              class="text-[10px] font-black tracking-[0.3em] uppercase text-cv-accent whitespace-nowrap"
             >
-              About Me
+              Profile Summary
             </h2>
+            <div class="h-px w-full bg-gray-100"></div>
           </div>
-          <p class="text-xs leading-relaxed text-gray-600">
-            Frontend engineer focused on building scalable, production-ready web
-            applications. Experienced in React-based architecture, API
-            integration, and deploying applications from development to
-            production. Strong product mindset with a systems-thinking approach
-            to UI development.
+          <p class="text-[10px] leading-relaxed text-gray-600">
+            Strategic Frontend Engineer specializing in building scalable,
+            user-centric web applications. Expert in React ecosystems with a
+            strong foundation in Mathematics, enabling a unique perspective on
+            complex state management and performance optimization.
           </p>
         </section>
 
-        <!-- Education -->
-        <section class="mb-12">
-          <div
-            class="bg-cv-sidebar/5 border-l-4 border-cv-sidebar p-2 mb-6 rounded-r-xl"
-          >
+        <section>
+          <div class="flex items-center gap-4 mb-2">
             <h2
-              class="text-xs font-black tracking-[0.3em] uppercase pl-2 text-cv-sidebar"
-            >
-              Education
-            </h2>
-          </div>
-          <div class="flex justify-between items-start">
-            <div class="space-y-1">
-              <h3 class="font-bold text-sm text-gray-800">
-                University of Lagos
-              </h3>
-              <p class="text-[11px] text-gray-500 italic">
-                Bachelor of Science, Mathematics
-              </p>
-              <p class="text-[10px] text-gray-500 mt-2">
-                Strong analytical foundation supporting logical thinking and
-                structured problem solving.
-              </p>
-            </div>
-            <span class="text-[10px] font-bold text-cv-sidebar"
-              >2019 — 2023</span
-            >
-          </div>
-        </section>
-
-        <!-- Experience -->
-        <section class="mb-12">
-          <div
-            class="bg-cv-sidebar/5 border-l-4 border-cv-sidebar p-2 mb-6 rounded-r-xl"
-          >
-            <h2
-              class="text-xs font-black tracking-[0.3em] uppercase pl-2 text-cv-sidebar"
+              class="text-[10px] font-black tracking-[0.3em] uppercase text-cv-accent whitespace-nowrap"
             >
               Experience
             </h2>
+            <div class="h-px w-full bg-gray-100"></div>
           </div>
-          <div class="space-y-8">
-            <div class="relative pl-6 border-l border-gray-100">
-              <div
-                class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-cv-sidebar"
-              ></div>
-              <div class="flex justify-between items-start mb-2">
-                <div>
-                  <h3 class="font-bold text-sm text-gray-800">
-                    Customer Experience Representative
-                  </h3>
-                  <p class="text-[11px] text-cv-sidebar font-semibold">
-                    Kuda MFB
-                  </p>
-                </div>
-                <span class="text-[10px] font-bold text-gray-400"
-                  >2024 — 2025</span
+          <div class="space-y-4">
+            <div class="relative">
+              <div class="flex justify-between items-baseline mb-1">
+                <h3 class="font-bold text-sm text-gray-800">
+                  Frontend Engineer (Lead)
+                </h3>
+                <span class="text-[9px] font-bold text-gray-400 uppercase"
+                  >2024 — Present</span
                 >
               </div>
-              <ul class="text-[10px] text-gray-600 space-y-1 list-disc pl-4">
+              <p class="text-[10px] text-cv-accent font-bold mb-2">
+                Terakins Global (Freelance)
+              </p>
+              <ul class="text-[9px] text-gray-600 space-y-0.5 list-disc pl-4">
                 <li>
-                  Collaborated cross-functionally with account management teams
-                  to resolve user issues efficiently.
+                  Architected e-commerce platform using React/Tailwind, leading
+                  to <span class="font-bold">40% increase</span> user retention.
                 </li>
                 <li>
-                  Improved workflow handling by managing live support tickets
-                  with structured prioritization.
-                </li>
-                <li>
-                  Developed strong problem-solving skills transferable to
-                  debugging and system analysis.
-                </li>
-              </ul>
-            </div>
-
-            <div class="relative pl-6 border-l border-gray-100">
-              <div
-                class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-gray-200"
-              ></div>
-              <div class="flex justify-between items-start mb-2">
-                <div>
-                  <h3 class="font-bold text-sm text-gray-800">
-                    Onchain Analyst
-                  </h3>
-                  <p class="text-[11px] text-cv-sidebar font-semibold">
-                    Alphanomics
-                  </p>
-                </div>
-                <span class="text-[10px] font-bold text-gray-400">2023</span>
-              </div>
-              <ul class="text-[10px] text-gray-600 space-y-1 list-disc pl-4">
-                <li>
-                  Analyzed financial market data and translated complex
-                  information into structured insights.
-                </li>
-                <li>
-                  Communicated technical analysis clearly to stakeholders.
+                  Optimized asset delivery, reducing initial load times by 1.2s
+                  across the platform.
                 </li>
               </ul>
             </div>
 
-            <div class="relative pl-6 border-l border-gray-100">
-              <div
-                class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-gray-200"
-              ></div>
-              <div class="flex justify-between items-start mb-2">
-                <div>
-                  <h3 class="font-bold text-sm text-gray-800">
-                    Community Manager
-                  </h3>
-                  <p class="text-[11px] text-cv-sidebar font-semibold">
-                    Opipets
-                  </p>
-                </div>
-                <span class="text-[10px] font-bold text-gray-400">2022</span>
+            <div class="relative">
+              <div class="flex justify-between items-baseline mb-1">
+                <h3 class="font-bold text-sm text-gray-800">
+                  Customer Experience & Support
+                </h3>
+                <span class="text-[9px] font-bold text-gray-400 uppercase"
+                  >2023 — 2024</span
+                >
               </div>
+              <p class="text-[10px] text-cv-accent font-bold mb-2">Kuda MFB</p>
               <ul class="text-[10px] text-gray-600 space-y-1 list-disc pl-4">
-                <li>Managed and scaled an online gaming community.</li>
                 <li>
-                  Improved engagement through structured initiatives and
-                  feedback loops.
+                  Resolved technical account issues for thousands of users
+                  through structured ticket management.
+                </li>
+                <li>
+                  Collaborated with product teams to identify and document
+                  repeating UI friction points.
+                </li>
+              </ul>
+            </div>
+
+            <div class="relative">
+              <div class="flex justify-between items-baseline mb-1">
+                <h3 class="font-bold text-sm text-gray-800">Onchain Analyst</h3>
+                <span class="text-[9px] font-bold text-gray-400 uppercase"
+                  >2023</span
+                >
+              </div>
+              <p class="text-[10px] text-cv-accent font-bold mb-2">
+                Alphanomics
+              </p>
+              <ul class="text-[10px] text-gray-600 space-y-1 list-disc pl-4">
+                <li>
+                  Translated complex blockchain data into actionable reports for
+                  institutional stakeholders.
+                </li>
+                <li>
+                  Honed technical communication skills and logical data
+                  structuring.
                 </li>
               </ul>
             </div>
           </div>
         </section>
 
-        <!-- Projects Section -->
         <section>
-          <div
-            class="bg-cv-sidebar/5 border-l-4 border-cv-sidebar p-2 mb-6 rounded-r-xl"
-          >
+          <div class="flex items-center gap-4 mb-2">
             <h2
-              class="text-xs font-black tracking-[0.3em] uppercase pl-2 text-cv-sidebar"
+              class="text-[10px] font-black tracking-[0.3em] uppercase text-cv-accent whitespace-nowrap"
             >
-              Projects
+              Selected Projects
             </h2>
+            <div class="h-px w-full bg-gray-100"></div>
           </div>
-          <p class="text-[10px] italic text-gray-500 leading-relaxed">
-            Frontend projects focused on scalable UI systems, backend
-            integration, and deployment. Built real-world applications with
-            structured component architecture and production-ready builds.
-            <br /><br />
-            <strong>Detailed projects and case studies available at:</strong>
-            <br />
-            <span class="text-cv-sidebar font-bold"
-              >https://my-portfolio-1-don.vercel.app/</span
-            >
-          </p>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-0.5">
+              <h4 class="text-[10px] font-bold text-gray-800">DriftCare NG</h4>
+              <p class="text-[9px] text-gray-500">
+                AI-powered health preventive monitor tailored for Nigeria.
+              </p>
+            </div>
+            <div class="space-y-0.5">
+              <h4 class="text-[10px] font-bold text-gray-800">
+                Naija Tax Guide
+              </h4>
+              <p class="text-[9px] text-gray-500">
+                Strategic literacy tool for simplified tax reform education.
+              </p>
+            </div>
+            <div class="col-span-2 mt-2 pt-2 border-t border-gray-50">
+              <p class="text-[9px] italic text-gray-400 text-center">
+                Full case studies and code available at
+                <span class="text-cv-accent font-bold"
+                  >https://my-portfolio-1-don.vercel.app/</span
+                >
+              </p>
+            </div>
+          </div>
         </section>
       </main>
     </div>

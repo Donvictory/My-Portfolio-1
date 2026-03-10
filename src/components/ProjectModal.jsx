@@ -61,14 +61,33 @@ const ProjectModal = ({ project, onClose }) => {
 
               <div className="p-8 lg:p-14 relative z-10 w-full">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
-                  <div className="lg:col-span-2 space-y-6">
-                    <div className="space-y-3">
+                  <div className="lg:col-span-2 space-y-10">
+                    <div className="space-y-4">
                       <h4 className="text-stone-600 font-bold uppercase tracking-[0.3em] text-[9px]">
                         The Narrative
                       </h4>
                       <p className="text-stone-400 text-lg lg:text-xl leading-relaxed italic font-medium">
                         "{project.desc}"
                       </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-3">
+                        <h4 className="text-stone-600 font-bold uppercase tracking-[0.3em] text-[9px]">
+                          My Role
+                        </h4>
+                        <p className="text-cream font-display font-bold text-lg">
+                          {project.role}
+                        </p>
+                      </div>
+                      <div className="space-y-3">
+                        <h4 className="text-stone-600 font-bold uppercase tracking-[0.3em] text-[9px]">
+                          Key Impact
+                        </h4>
+                        <p className="text-stone-400 text-sm leading-relaxed">
+                          {project.impact}
+                        </p>
+                      </div>
                     </div>
                   </div>
 

@@ -17,15 +17,25 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
   const navItems = [
     { id: "intro", label: "Home", icon: Home },
     { id: "expertise", label: "Expertise", icon: Zap },
+    { id: "approach", label: "Method", icon: Briefcase },
+    { id: "experience", label: "Experience", icon: FileDown },
     { id: "works", label: "Projects", icon: Briefcase },
     { id: "about", label: "About Me", icon: User },
     { id: "connect", label: "Contact", icon: Mail },
   ];
 
   const socialItems = [
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Twitter, href: "#", label: "Twitter" },
+    { icon: Github, href: "https://github.com/Donvictory", label: "GitHub" },
+    {
+      icon: Linkedin,
+      href: "https://www.linkedin.com/in/oluwasegun-donvictory-b27a87221?trk=contact-info",
+      label: "LinkedIn",
+    },
+    {
+      icon: Twitter,
+      href: "https://twitter.com/don_of_victory",
+      label: "Twitter",
+    },
   ];
 
   return (

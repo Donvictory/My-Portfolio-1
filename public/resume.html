@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donvictory Adewumi - Resume</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @media print {
+        body {
+          background-color: white !important;
+        }
+        .no-print {
+          display: none;
+        }
+        @page {
+          size: A4;
+          margin: 1.5cm;
+        }
+        .resume-container {
+          box-shadow: none !important;
+          padding: 0 !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 font-sans text-gray-900 antialiased p-4">
+    <div class="no-print fixed bottom-8 right-8 z-50">
+      <button
+        onclick="window.print()"
+        class="bg-black text-white px-6 py-3 rounded-full shadow-2xl hover:scale-105 transition-transform font-bold uppercase tracking-widest text-xs"
+      >
+        Download PDF
+      </button>
+    </div>
+
+    <div
+      class="resume-container max-w-[800px] mx-auto bg-white p-12 shadow-sm min-h-[297mm]"
+    >
+      <header
+        class="border-b-2 border-black pb-8 mb-8 flex justify-between items-end"
+      >
+        <div>
+          <h1 class="text-4xl font-extrabold tracking-tight uppercase">
+            Donvictory Adewumi
+          </h1>
+          <p
+            class="text-lg font-medium text-gray-500 mt-1 uppercase tracking-widest"
+          >
+            Frontend Engineer
+          </p>
+        </div>
+        <div class="text-right text-[11px] font-medium space-y-1">
+          <p>Lagos, Nigeria</p>
+          <p>+234 909 173 5644</p>
+          <p>donvictoryadewumi4@gmail.com</p>
+          <p>github.com/donvictory | https://my-portfolio-1-don.vercel.app/</p>
+        </div>
+      </header>
+
+      <section class="mb-10">
+        <h2
+          class="text-xs font-black uppercase tracking-[0.2em] border-b border-gray-100 pb-2 mb-4"
+        >
+          Professional Profile
+        </h2>
+        <p class="text-[13px] leading-relaxed text-gray-700">
+          Frontend Engineer with a focus on building scalable web products that
+          solve real-world problems. Leveraging a mathematical background to
+          architect clean, maintainable systems using React, TypeScript, and
+          modern UI frameworks. Committed to high-performance delivery and
+          strategic problem-solving.
+        </p>
+      </section>
+
+      <section class="mb-10">
+        <h2
+          class="text-xs font-black uppercase tracking-[0.2em] border-b border-gray-100 pb-2 mb-4"
+        >
+          Core Expertise
+        </h2>
+        <div class="grid grid-cols-3 gap-8">
+          <div>
+            <h3 class="text-[11px] font-bold uppercase mb-2">Languages</h3>
+            <p class="text-[12px] text-gray-600">
+              JavaScript (ES6+), TypeScript, HTML5, CSS3/Sass
+            </p>
+          </div>
+          <div>
+            <h3 class="text-[11px] font-bold uppercase mb-2">Frameworks</h3>
+            <p class="text-[12px] text-gray-600">
+              React, Next.js, Tailwind CSS, Framer Motion
+            </p>
+          </div>
+          <div>
+            <h3 class="text-[11px] font-bold uppercase mb-2">Tools</h3>
+            <p class="text-[12px] text-gray-600">
+              Vite, Git, GitHub Actions, Figma, Vercel
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-10">
+        <h2
+          class="text-xs font-black uppercase tracking-[0.2em] border-b border-gray-100 pb-2 mb-4"
+        >
+          Professional Experience
+        </h2>
+        <div class="space-y-8">
+          <div>
+            <div class="flex justify-between items-baseline mb-2">
+              <h3 class="text-[14px] font-bold uppercase">
+                Frontend Engineer (Lead)
+              </h3>
+              <span class="text-[12px] font-medium text-gray-400"
+                >2024 — PRESENT</span
+              >
+            </div>
+            <p class="text-[12px] font-bold text-gray-600 mb-3">
+              Terakins Global
+            </p>
+            <ul class="text-[13px] text-gray-700 space-y-2 list-disc pl-5">
+              <li>
+                Engineered a comprehensive e-commerce platform for a wellness
+                brand, resulting in 40% higher mobile user engagement.
+              </li>
+              <li>
+                Architected modular component libraries using React and
+                Tailwind, reducing development time for new features by 30%.
+              </li>
+              <li>
+                Optimized frontend performance metrics, achieving a 95+
+                Lighthouse score across core pages.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-baseline mb-2">
+              <h3 class="text-[14px] font-bold uppercase">
+                Customer Experience & Support
+              </h3>
+              <span class="text-[12px] font-medium text-gray-400"
+                >2023 — 2024</span
+              >
+            </div>
+            <p class="text-[12px] font-bold text-gray-600 mb-3">Kuda MFB</p>
+            <ul class="text-[13px] text-gray-700 space-y-2 list-disc pl-5">
+              <li>
+                Managed technical support workflows, resolving thousands of
+                account-related issues with high satisfaction rates.
+              </li>
+              <li>
+                Identified critical UI/UX friction points and documented them
+                for the engineering and product teams.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-10">
+        <h2
+          class="text-xs font-black uppercase tracking-[0.2em] border-b border-gray-100 pb-2 mb-4"
+        >
+          Education
+        </h2>
+        <div class="flex justify-between items-baseline">
+          <div>
+            <h3 class="text-[14px] font-bold uppercase">B.Sc. Mathematics</h3>
+            <p class="text-[13px] text-gray-600">University of Lagos</p>
+          </div>
+          <span class="text-[12px] font-medium text-gray-400">2021 — 2025</span>
+        </div>
+      </section>
+
+      <section>
+        <h2
+          class="text-xs font-black uppercase tracking-[0.2em] border-b border-gray-100 pb-2 mb-4"
+        >
+          Notable Projects
+        </h2>
+        <div class="grid grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-[12px] font-bold uppercase mb-1">DriftCare NG</h3>
+            <p class="text-[12px] text-gray-600">
+              AI-powered health monitor dashboard focusing on preventive care
+              and symptom tracking.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-[12px] font-bold uppercase mb-1">
+              Naija Tax Guide
+            </h3>
+            <p class="text-[12px] text-gray-600">
+              Productivity tool for simplifying complex tax reforms in Nigeria
+              for the general public.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
