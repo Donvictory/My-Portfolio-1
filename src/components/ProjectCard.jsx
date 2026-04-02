@@ -11,13 +11,13 @@ const ProjectCard = ({ project, onClick }) => {
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
       className="group relative glass-card p-0"
     >
-      <div className="relative h-64 w-full overflow-hidden rounded-t-[2rem] bg-stone-900 border-b border-white/5">
+      <div className="relative h-64 w-full overflow-hidden rounded-t-[2rem] bg-portfolio-bg border-b border-glass-border">
         <motion.img
           src={project.image}
           alt={project.title}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100"
+          className="h-full w-full object-cover transition-transform duration-700"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-portfolio-bg/80 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0   from-portfolio-bg/80 via-transparent to-transparent pointer-events-none" />
       </div>
 
       <div className="relative z-10 p-8 flex flex-col gap-6">
@@ -36,12 +36,12 @@ const ProjectCard = ({ project, onClick }) => {
           <h3 className="text-2xl font-bold font-display text-cream leading-tight">
             {project.title}
           </h3>
-          <p className="text-stone-500 text-sm leading-relaxed group-hover:text-stone-400 transition-colors">
+          <p className="text-dim text-sm leading-relaxed group-hover:text-cream/80 transition-colors">
             {project.desc}
           </p>
         </div>
 
-        <div className="pt-6 border-t border-white/5 space-y-4">
+        <div className="pt-6 border-t border-glass-border space-y-4">
           <div className="flex flex-row gap-3">
             {project.live && (
               <a
@@ -49,7 +49,7 @@ const ProjectCard = ({ project, onClick }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-accent text-portfolio-bg text-[10px] font-black uppercase tracking-widest hover:bg-white hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-accent/5"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-accent text-portfolio-bg text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-accent/5"
               >
                 <ExternalLink size={14} /> Live
               </a>
@@ -60,7 +60,7 @@ const ProjectCard = ({ project, onClick }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-white/5 border border-white/10 text-stone-300 text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white hover:scale-[1.02] transition-all duration-300"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-glass-bg border border-glass-border text-dim text-[10px] font-bold uppercase tracking-widest hover:bg-glass-border hover:text-cream hover:scale-[1.02] transition-all duration-300"
               >
                 <Github size={14} /> GitHub
               </a>
@@ -69,7 +69,7 @@ const ProjectCard = ({ project, onClick }) => {
 
           <button
             onClick={() => onClick(project)}
-            className="w-full flex items-center justify-center gap-2 py-2 text-[9px] font-bold tracking-[0.4em] text-stone-600 hover:text-accent transition-all uppercase group"
+            className="w-full flex items-center justify-center gap-2 py-2 text-[9px] font-bold tracking-[0.4em] text-dim hover:text-accent transition-all uppercase group"
           >
             Insights{" "}
             <ArrowRight

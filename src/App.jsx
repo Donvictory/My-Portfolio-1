@@ -20,6 +20,8 @@ import {
   Copy,
   Check,
   ArrowUp,
+  Sun,
+  Moon,
 } from "lucide-react";
 import "./index.css";
 import { projects } from "./data";
@@ -109,6 +111,20 @@ function App() {
   const [showHeroButtons, setShowHeroButtons] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
+
+  useEffect(() => {
+    if (theme === "light") {
+      document.documentElement.classList.add("light");
+    } else {
+      document.documentElement.classList.remove("light");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -216,13 +232,13 @@ function App() {
           DA.
         </motion.h2>
 
-        <div className="hidden lg:flex items-center gap-10 bg-white/5 backdrop-blur-xl border border-white/10 px-8 py-3 rounded-2xl">
+        <div className="hidden lg:flex items-center gap-10 bg-glass-bg backdrop-blur-xl border border-glass-border px-8 py-3 rounded-2xl">
           {navItems.map((item) => (
             <a
               key={item.id}
               href={`#${item.id}`}
               className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:text-accent ${
-                activeSection === item.id ? "text-accent" : "text-stone-500"
+                activeSection === item.id ? "text-accent" : "text-dim"
               }`}
             >
               {item.label}
@@ -231,6 +247,14 @@ function App() {
         </div>
 
         <div className="flex items-center gap-4">
+          <button
+            onClick={toggleTheme}
+            className="p-2.5 rounded-2xl bg-glass-bg border border-glass-border text-dim hover:text-accent transition-all backdrop-blur-md"
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
           <a
             href="/cv.html"
             target="_blank"
@@ -244,7 +268,7 @@ function App() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             onClick={() => setIsSidebarOpen(true)}
-            className="lg:hidden group flex items-center gap-3 py-2.5 px-5 rounded-2xl bg-white/5 border border-white/10 text-stone-400 hover:text-white transition-all backdrop-blur-md"
+            className="lg:hidden group flex items-center gap-3 py-2.5 px-5 rounded-2xl bg-glass-bg border border-glass-border text-dim hover:text-accent transition-all backdrop-blur-md"
           >
             <Menu size={20} />
           </motion.button>
@@ -268,7 +292,7 @@ function App() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-accent font-bold text-[9px] uppercase tracking-[0.3em] backdrop-blur-md"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-glass-bg border border-glass-border text-accent font-bold text-[9px] uppercase tracking-[0.3em] backdrop-blur-md"
             >
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
@@ -291,7 +315,7 @@ function App() {
                 text="I build scalable web products that solve real problems, transforming ideas into systems people can rely on."
                 delay={2.0}
                 onComplete={() => setShowHeroButtons(true)}
-                className="block text-base lg:text-lg text-stone-400 font-medium leading-relaxed italic opacity-80"
+                className="block text-base lg:text-lg text-dim font-medium leading-relaxed italic opacity-80"
               />
             </div>
 
@@ -328,7 +352,7 @@ function App() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: showHeroButtons ? 1 : 0 }}
-            className="absolute bottom-10 flex flex-col items-center gap-3 text-stone-700 pointer-events-none"
+            className="absolute bottom-10 flex flex-col items-center gap-3 text-dim/40 pointer-events-none"
           >
             <span className="text-[9px] uppercase tracking-[0.4em] font-bold">
               Begin Journey
@@ -345,10 +369,10 @@ function App() {
         <section className="py-24 border-y border-white/5 relative overflow-hidden">
           <div className="absolute inset-0 bg-white/[0.01]" />
           <div className="max-w-6xl mx-auto px-6 relative z-10">
-            <p className="text-[10px] font-bold tracking-[0.4em] text-stone-700 uppercase text-center mb-12">
+            <p className="text-[10px] font-bold tracking-[0.4em] text-dim/30 uppercase text-center mb-12">
               Technical Stack & Strategic Tools
             </p>
-            <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-20 grayscale hover:grayscale-0 hover:opacity-50 transition-all duration-700">
+            <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-10 grayscale hover:grayscale-0 hover:opacity-40 transition-all duration-700">
               {[
                 "React",
                 "Next.js",
@@ -368,7 +392,7 @@ function App() {
           </div>
         </section>
 
-        <section id="expertise" ref={sectionRefs.expertise} className="py-32">
+        <section id="expertise" ref={sectionRefs.expertise} className="py-10">
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -419,7 +443,7 @@ function App() {
                   <h4 className="text-xl font-bold font-display text-cream mb-4">
                     {box.title}
                   </h4>
-                  <div className="text-stone-500 text-sm leading-relaxed group-hover:text-stone-400 transition-colors">
+                  <div className="text-dim text-sm leading-relaxed group-hover:text-cream/80 transition-colors">
                     {box.desc}
                   </div>
                 </motion.div>
@@ -440,7 +464,7 @@ function App() {
                 <motion.span
                   key={skill}
                   variants={itemVariants}
-                  className="px-6 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-stone-500 font-bold text-xs hover:border-accent/40 hover:text-accent transition-all cursor-default"
+                  className="px-6 py-2.5 rounded-2xl bg-glass-bg border border-glass-border text-dim font-bold text-xs hover:border-accent hover:text-accent transition-all cursor-default"
                 >
                   {skill}
                 </motion.span>
@@ -452,16 +476,16 @@ function App() {
         <section
           id="approach"
           ref={sectionRefs.approach}
-          className="py-32 relative overflow-hidden"
+          className="py-10 relative overflow-hidden"
         >
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-accent/5 rounded-full blur-[120px] -z-10" />
 
           <div className="space-y-20">
-            <div className="text-center space-y-4">
-              <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-60">
+            <div className="text-center space-y-1">
+              <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-50">
                 The Methodology
               </h2>
-              <h3 className="text-4xl lg:text-6xl font-bold font-display text-cream">
+              <h3 className="text-4xl lg:text-6xl font-bold font-display text-cream/90">
                 My Approach.
               </h3>
             </div>
@@ -495,10 +519,10 @@ function App() {
                   <span className="text-6xl font-black font-display text-accent/10 group-hover:text-accent/20 transition-colors block mb-6">
                     {item.step}
                   </span>
-                  <h4 className="text-2xl font-bold font-display text-cream mb-4">
+                  <h4 className="text-2xl font-bold font-display text-cream/90 mb-4">
                     {item.title}
                   </h4>
-                  <p className="text-stone-500 text-sm leading-relaxed group-hover:text-stone-400 transition-colors">
+                  <p className="text-dim/80 text-sm leading-relaxed group-hover:text-cream/70 transition-colors">
                     {item.desc}
                   </p>
                 </motion.div>
@@ -507,7 +531,7 @@ function App() {
           </div>
         </section>
 
-        <section id="experience" ref={sectionRefs.experience} className="py-32">
+        <section id="experience" ref={sectionRefs.experience} className="py-10">
           <div className="space-y-20">
             <div className="text-center space-y-4">
               <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-60">
@@ -558,11 +582,11 @@ function App() {
                       <h4 className="text-2xl font-bold font-display text-cream">
                         {item.role}
                       </h4>
-                      <p className="text-stone-500 font-bold text-sm tracking-wide">
+                      <p className="text-dim font-bold text-sm tracking-wide">
                         {item.company}
                       </p>
                     </div>
-                    <p className="text-stone-400 text-sm leading-relaxed max-w-2xl">
+                    <p className="text-dim/80 text-sm leading-relaxed max-w-2xl">
                       {item.desc}
                     </p>
                   </div>
@@ -572,7 +596,7 @@ function App() {
           </div>
         </section>
 
-        <section id="works" ref={sectionRefs.works} className="py-32">
+        <section id="works" ref={sectionRefs.works} className="py-10">
           <div className="space-y-20">
             <div className="flex flex-col items-center text-center space-y-6">
               <div className="space-y-2">
@@ -584,7 +608,7 @@ function App() {
                 </h3>
               </div>
 
-              <div className="flex flex-wrap gap-2 p-1.5 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md">
+              <div className="flex flex-wrap gap-2 p-1.5 bg-glass-bg border border-glass-border rounded-2xl backdrop-blur-md">
                 {["all", "react", "javascript"].map((f) => (
                   <button
                     key={f}
@@ -592,7 +616,7 @@ function App() {
                     className={`px-6 py-2 rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all duration-500 ${
                       filter === f
                         ? "bg-accent text-portfolio-bg shadow-lg"
-                        : "text-stone-500 hover:text-stone-300"
+                        : "text-dim hover:text-accent"
                     }`}
                   >
                     {f === "javascript" ? "JS" : f}
@@ -640,8 +664,8 @@ function App() {
                 className="space-y-8"
               >
                 <div className="space-y-4">
-                  <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-60">
-                    The Journey
+                  <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-50">
+                    The Narrative
                   </h2>
                   <h3 className="text-5xl lg:text-7xl font-bold font-display text-cream leading-[0.9] tracking-tighter">
                     Behind the <br />{" "}
@@ -652,11 +676,11 @@ function App() {
                 <div className="flex items-center gap-6 p-1">
                   <div className="h-px w-12 bg-accent/30" />
                   <div className="flex flex-col">
-                    <span className="text-stone-500 text-[10px] font-bold uppercase tracking-[0.2em]">
-                      Background
+                    <span className="text-dim/60 text-[10px] font-bold uppercase tracking-[0.2em]">
+                      Academic Foundation
                     </span>
-                    <span className="text-cream font-display font-medium">
-                      Mathematics Graduate, University of Lagos '25
+                    <span className="text-cream/80 font-display font-medium">
+                      Mathematics Graduate, University of Lagos
                     </span>
                   </div>
                 </div>
@@ -666,10 +690,10 @@ function App() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="space-y-8 text-lg lg:text-xl text-stone-400 font-medium leading-[1.8]"
+                className="space-y-8 text-lg lg:text-xl text-dim font-medium leading-[1.8]"
               >
                 <div className="space-y-6 relative">
-                  <div className="absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-accent/50 to-transparent" />
+                  <div className="absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-accent/30 to-transparent" />
                   <p>
                     I dove into the tech space aiming to become a blockchain
                     developer, driven by my passion for crypto. I wanted to be
@@ -678,15 +702,15 @@ function App() {
                   <p>
                     Along the way, I picked up front-end development, and it's
                     been a great journey! I started with the basics –{" "}
-                    <span className="text-cream">
+                    <span className="text-cream/90">
                       HTML, CSS, and JavaScript
                     </span>{" "}
                     – then moved on to{" "}
-                    <span className="text-accent underline underline-offset-8 decoration-accent/30 font-display italic">
+                    <span className="text-accent hover:text-accent/80 underline underline-offset-8 decoration-accent/20 transition-colors font-display italic">
                       React and Tailwind CSS.
                     </span>
                   </p>
-                  <p className="text-stone-300">
+                  <p className="text-dim/90">
                     The learning never stops, and I'm excited to keep improving.
                     My goal is to create innovative, scalable solutions that
                     solve real problems.
@@ -700,10 +724,10 @@ function App() {
                 viewport={{ once: true }}
                 className="flex flex-wrap gap-4 pt-4"
               >
-                <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-stone-500 font-bold text-[10px] uppercase tracking-widest">
+                <div className="px-6 py-3 rounded-2xl bg-glass-bg border border-glass-border text-dim/80 font-bold text-[10px] uppercase tracking-widest hover:border-accent/30 transition-all cursor-default">
                   Blockchain Enthusiast
                 </div>
-                <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-stone-500 font-bold text-[10px] uppercase tracking-widest">
+                <div className="px-6 py-3 rounded-2xl bg-glass-bg border border-glass-border text-dim/80 font-bold text-[10px] uppercase tracking-widest hover:border-accent/30 transition-all cursor-default">
                   Frontend Engineer
                 </div>
               </motion.div>
@@ -712,12 +736,13 @@ function App() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="p-8 rounded-[2rem] bg-accent/5 border border-accent/10 space-y-4"
+                className="p-8 lg:p-10 rounded-[2.5rem] bg-glass-bg border border-glass-border space-y-6 relative overflow-hidden group shadow-sm"
               >
-                <h4 className="text-xs font-bold tracking-[0.2em] uppercase text-accent">
-                  The Philosophy
+                <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-full blur-3xl -mr-12 -mt-12 group-hover:bg-accent/10 transition-colors duration-700" />
+                <h4 className="text-xs font-bold tracking-[0.3em] uppercase text-accent/70">
+                  The Principle
                 </h4>
-                <p className="text-stone-400 text-sm italic leading-relaxed">
+                <p className="text-dim/90 text-sm italic leading-relaxed relative z-10">
                   "I believe that software should be more than just functional;
                   it should be intuitive, resilient, and built with a deep
                   understanding of the human problem it aims to solve. My goal
@@ -732,7 +757,7 @@ function App() {
         <section
           id="connect"
           ref={sectionRefs.connect}
-          className="py-40 relative"
+          className="py-10 relative"
         >
           <div className="glass-card !p-12 lg:!p-24 overflow-hidden relative">
             <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-accent/10 rounded-full blur-[100px]" />
@@ -749,18 +774,18 @@ function App() {
                   </h3>
                 </div>
 
-                <p className="text-stone-500 text-lg lg:text-xl font-medium leading-relaxed max-w-md">
+                <p className="text-dim text-lg lg:text-xl font-medium leading-relaxed max-w-md">
                   I'm currently available for new projects and collaborations.
                   If you have any idea, let's make it a reality.
                 </p>
 
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-4 group">
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-stone-500 group-hover:text-accent group-hover:border-accent/30 transition-all">
+                    <div className="w-12 h-12 rounded-2xl bg-glass-bg border border-glass-border flex items-center justify-center text-dim group-hover:text-accent group-hover:border-accent/30 transition-all">
                       <Mail size={20} />
                     </div>
                     <div className="flex-1">
-                      <p className="text-[10px] uppercase tracking-widest text-stone-700 font-bold">
+                      <p className="text-[10px] uppercase tracking-widest text-dim/60 font-bold">
                         Email Me
                       </p>
                       <div className="flex items-center gap-3">
@@ -772,7 +797,7 @@ function App() {
                         </a>
                         <button
                           onClick={copyEmail}
-                          className="p-2 rounded-lg bg-white/5 border border-white/10 text-stone-600 hover:text-accent hover:border-accent/30 transition-all"
+                          className="p-2 rounded-lg bg-glass-bg border border-glass-border text-dim hover:text-accent hover:border-accent/30 transition-all"
                           title="Copy Email"
                         >
                           {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -781,11 +806,11 @@ function App() {
                     </div>
                   </div>
                   <div className="flex items-center gap-4 group">
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-stone-500">
+                    <div className="w-12 h-12 rounded-2xl bg-glass-bg border border-glass-border flex items-center justify-center text-dim">
                       <MapPin size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-widest text-stone-700 font-bold">
+                      <p className="text-[10px] uppercase tracking-widest text-dim/60 font-bold">
                         Location
                       </p>
                       <p className="text-cream font-bold">Lagos, Nigeria</p>
@@ -794,8 +819,8 @@ function App() {
                 </div>
               </div>
 
-              <div className="space-y-8 lg:pl-12 lg:border-l border-white/5">
-                <p className="text-stone-400 font-medium italic">
+              <div className="space-y-8 lg:pl-12 lg:border-l border-glass-border">
+                <p className="text-dim font-medium italic">
                   Seeking collaborative opportunities grounded in excellence,
                   thoughtful design, and clear structure.
                 </p>
@@ -826,14 +851,14 @@ function App() {
                     href="https://wa.me/2349091735644"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between p-6 rounded-[2rem] bg-white/5 border border-white/10 hover:border-accent/40 hover:bg-white/10 transition-all group"
+                    className="flex items-center justify-between p-6 rounded-[2rem] bg-glass-bg border border-glass-border hover:border-accent hover:bg-glass-border transition-all group"
                   >
                     <div className="flex items-center gap-4">
                       <MessageCircle
                         size={20}
                         className="text-[#25D366] group-hover:scale-110 transition-transform"
                       />
-                      <span className="font-bold uppercase tracking-widest text-[11px] text-stone-300 group-hover:text-cream transition-colors">
+                      <span className="font-bold uppercase tracking-widest text-[11px] text-dim group-hover:text-cream transition-colors">
                         Message on WhatsApp
                       </span>
                     </div>
@@ -849,13 +874,13 @@ function App() {
                     href="https://www.linkedin.com/in/oluwasegun-donvictory-b27a87221?trk=contact-info"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/30 transition-all group"
+                    className="flex-1 flex items-center gap-4 p-4 rounded-2xl bg-glass-bg border border-glass-border hover:border-accent transition-all group"
                   >
                     <Linkedin
                       size={18}
-                      className="text-stone-500 group-hover:text-[#0077B5] transition-colors"
+                      className="text-dim group-hover:text-[#0077B5] transition-colors"
                     />
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-stone-600">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-dim">
                       LinkedIn
                     </span>
                   </a>
@@ -863,13 +888,13 @@ function App() {
                     href="https://github.com/Donvictory"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/30 transition-all group"
+                    className="flex-1 flex items-center gap-4 p-4 rounded-2xl bg-glass-bg border border-glass-border hover:border-accent transition-all group"
                   >
                     <Github
                       size={18}
-                      className="text-stone-500 group-hover:text-white transition-colors"
+                      className="text-dim group-hover:text-cream transition-colors"
                     />
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-stone-600">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-dim">
                       GitHub
                     </span>
                   </a>
@@ -897,7 +922,7 @@ function App() {
                   href="https://linkedin.com/in/donvictoryadewumi"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-stone-500 hover:text-accent hover:border-accent/30 transition-all"
+                  className="w-10 h-10 rounded-xl bg-glass-bg border border-glass-border flex items-center justify-center text-dim hover:text-accent hover:bg-glass-border transition-all"
                 >
                   <Linkedin size={18} />
                 </a>
@@ -905,13 +930,13 @@ function App() {
                   href="https://github.com/Donvictory"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-stone-500 hover:text-white hover:border-white/20 transition-all"
+                  className="w-10 h-10 rounded-xl bg-glass-bg border border-glass-border flex items-center justify-center text-dim hover:text-cream hover:bg-glass-border transition-all"
                 >
                   <Github size={18} />
                 </a>
                 <a
                   href="mailto:donvictoryadewumi4@gmail.com"
-                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-stone-500 hover:text-accent hover:border-accent/30 transition-all"
+                  className="w-10 h-10 rounded-xl bg-glass-bg border border-glass-border flex items-center justify-center text-dim hover:text-accent hover:bg-glass-border transition-all"
                 >
                   <Mail size={18} />
                 </a>
@@ -956,11 +981,11 @@ function App() {
             </div>
           </div>
 
-          <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-[9px] font-bold tracking-[0.4em] text-stone-800 uppercase">
+          <div className="mt-20 pt-8 border-t border-glass-border flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-[9px] font-bold tracking-[0.4em] text-dim/60 uppercase">
               © 2025 Donvictory Adewumi • All Rights Reserved
             </div>
-            <div className="text-[9px] font-bold tracking-[0.4em] text-stone-800 uppercase flex gap-6">
+            <div className="text-[9px] font-bold tracking-[0.4em] text-dim/60 uppercase flex gap-6">
               <span>Strategize</span>
               <span>Design</span>
               <span>Build</span>

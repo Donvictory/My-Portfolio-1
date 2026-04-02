@@ -20,13 +20,13 @@ const ProjectModal = ({ project, onClose }) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: 30 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="relative w-full max-w-5xl bg-surface border border-white/5 rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+            className="relative w-full max-w-5xl bg-surface border border-glass-border rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
           >
             <div className="absolute inset-0 grain-overlay opacity-[0.02] pointer-events-none" />
 
             <button
               onClick={onClose}
-              className="absolute top-8 right-8 w-11 h-11 flex items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md text-stone-200 hover:text-white hover:bg-white/20 transition-all z-20 group border border-white/10"
+              className="absolute top-8 right-8 w-11 h-11 flex items-center justify-center rounded-2xl bg-glass-bg backdrop-blur-md text-dim hover:text-cream hover:bg-glass-border transition-all z-20 group border border-glass-border"
             >
               <X
                 size={20}
@@ -35,7 +35,7 @@ const ProjectModal = ({ project, onClose }) => {
             </button>
 
             <div className="overflow-y-auto w-full">
-              <div className="w-full h-80 lg:h-[450px] overflow-hidden relative border-b border-white/5 bg-stone-900">
+              <div className="w-full h-80 lg:h-[450px] overflow-hidden relative border-b border-glass-border bg-portfolio-bg">
                 <img
                   src={project.image}
                   alt={project.title}
@@ -63,17 +63,17 @@ const ProjectModal = ({ project, onClose }) => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
                   <div className="lg:col-span-2 space-y-10">
                     <div className="space-y-4">
-                      <h4 className="text-stone-600 font-bold uppercase tracking-[0.3em] text-[9px]">
+                      <h4 className="text-dim/60 font-bold uppercase tracking-[0.3em] text-[9px]">
                         The Narrative
                       </h4>
-                      <p className="text-stone-400 text-lg lg:text-xl leading-relaxed italic font-medium">
+                      <p className="text-dim text-lg lg:text-xl leading-relaxed italic font-medium">
                         "{project.desc}"
                       </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-3">
-                        <h4 className="text-stone-600 font-bold uppercase tracking-[0.3em] text-[9px]">
+                        <h4 className="text-dim/60 font-bold uppercase tracking-[0.3em] text-[9px]">
                           My Role
                         </h4>
                         <p className="text-cream font-display font-bold text-lg">
@@ -81,10 +81,10 @@ const ProjectModal = ({ project, onClose }) => {
                         </p>
                       </div>
                       <div className="space-y-3">
-                        <h4 className="text-stone-600 font-bold uppercase tracking-[0.3em] text-[9px]">
+                        <h4 className="text-dim/60 font-bold uppercase tracking-[0.3em] text-[9px]">
                           Key Impact
                         </h4>
-                        <p className="text-stone-400 text-sm leading-relaxed">
+                        <p className="text-dim text-sm leading-relaxed">
                           {project.impact}
                         </p>
                       </div>
@@ -93,7 +93,7 @@ const ProjectModal = ({ project, onClose }) => {
 
                   <div className="space-y-8">
                     <div className="space-y-4">
-                      <h4 className="text-stone-600 font-bold uppercase tracking-[0.3em] text-[9px]">
+                      <h4 className="text-dim/60 font-bold uppercase tracking-[0.3em] text-[9px]">
                         Direct Access
                       </h4>
                       <div className="flex flex-col gap-3">
@@ -123,7 +123,7 @@ const ProjectModal = ({ project, onClose }) => {
                 </div>
               </div>
 
-              <div className="px-14 py-8 bg-white/[0.01] border-t border-white/5 flex justify-between items-center text-[9px] font-bold tracking-[0.4em] text-stone-700 uppercase">
+              <div className="px-14 py-8 bg-glass-bg border-t border-glass-border flex justify-between items-center text-[9px] font-bold tracking-[0.4em] text-dim uppercase">
                 <span>Selected Works // 2025</span>
                 <span className="text-accent/20 italic">Prop. DV Adewumi</span>
               </div>
