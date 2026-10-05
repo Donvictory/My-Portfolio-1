@@ -3,7 +3,7 @@ export const projects = [
     id: 1,
     title: "PropertyJar Realty",
     tags: ["next.js", "react", "firebase", "tailwind", "framer-motion", "typescript"],
-    role: "Full Stack Developer",
+    role: "Software Developer",
     impact:
       "Built a high-end luxury real estate discovery platform with dynamic listing filters and investor campaign flows, increasing property inquiry conversions by 35%.",
     desc: "A high-end luxury real estate discovery platform featuring dynamic listing filters, immersive property showcases, investor campaign flows, and automated lead inquiry management.",
@@ -15,7 +15,7 @@ export const projects = [
     id: 2,
     title: "iMart Devices",
     tags: ["next.js", "typescript", "supabase", "tailwind", "react"],
-    role: "Full Stack Engineer",
+    role: "Software Developer",
     impact:
       "Built a full-stack gadget commerce and trade-in platform featuring automated device valuation, real-time Supabase inventory sync, and animated product walkthroughs.",
     desc: "A full-stack gadget commerce and trade-in platform featuring automated device valuation, real-time Supabase inventory sync, and animated product walkthroughs.",

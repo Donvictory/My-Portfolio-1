@@ -367,7 +367,7 @@ function App() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 idx: "01",
@@ -386,12 +386,6 @@ function App() {
                 title: "Data Flow & API Integration",
                 desc: "Connecting user interfaces with backend RESTful services, WebExtensions APIs, caching patterns, and optimistic UI updates.",
                 stack: ["REST APIs", "Async Patterns", "WebExtensions", "Browser Storage"],
-              },
-              {
-                idx: "04",
-                title: "Mathematical Problem Solving",
-                desc: "Applying computational discrete mathematics and graph theory from UNILAG to architect logical algorithms and solve system constraints.",
-                stack: ["Algorithmic Logic", "Data Structures", "Analytical Modeling"],
               },
             ].map((item) => (
               <div
@@ -437,18 +431,18 @@ function App() {
           <div className="divide-y divide-border border-y border-border">
             {[
               {
-                year: "2024 — Present",
-                role: "Frontend Engineer (Contract)",
-                org: "Freelance / Open Source",
+                year: "May 2026 — Present",
+                role: "Software Developer",
+                org: "PropertyJar Realty",
                 summary:
-                  "Designed and deployed production web applications using React, Tailwind CSS, and Framer Motion. Engineered the Terakins Global e-commerce experience, boosting mobile engagement by 40%.",
+                  "Developed the responsive web application frontend and integrated Backend-as-a-Service (BaaS) for property listings, dynamic query filters, campaign showcases, and automated lead inquiry management.",
               },
               {
-                year: "2023 — 2024",
-                role: "Frontend Developer Trainee",
-                org: "Self-Directed Learning / Community",
+                year: "2025 — 2026",
+                role: "Software Developer",
+                org: "iMart Devices",
                 summary:
-                  "Mastered modern JavaScript frameworks and responsive component architectures. Built mission-driven platforms including Naija Tax Guide (1,000+ early users) and DriftCare NG.",
+                  "Engineered the frontend application and implemented BaaS (Supabase) database architecture for automated gadget trade-in valuation, real-time inventory synchronization, and commerce flows.",
               },
               {
                 year: "2021 — 2025",

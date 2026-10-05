@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowUpRight, Github, Linkedin, Twitter, FileDown } from "lucide-react";
+import { X, Github, Linkedin, Twitter, FileDown } from "lucide-react";
 
 const Sidebar = ({ isOpen, onClose, activeSection }) => {
   const navItems = [
@@ -67,7 +67,7 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
 
               {/* Navigation Links */}
               <nav className="flex flex-col gap-1">
-                {navItems.map((item, idx) => {
+                {navItems.map((item) => {
                   const isActive = activeSection === item.id;
                   return (
                     <a
@@ -81,9 +81,6 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
                       }`}
                     >
                       <span>{item.label}</span>
-                      <span className="font-mono text-[10px] text-text-tertiary">
-                        0{idx + 1}
-                      </span>
                     </a>
                   );
                 })}

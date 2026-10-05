@@ -9,23 +9,13 @@ const ProjectCard = ({ project, onClick }) => {
     >
       {/* Browser Showcase Header & Media */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-subtle border-b border-border">
-        {/* Faux Browser Chrome */}
-        <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between pointer-events-none">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface/90 backdrop-blur-md border border-border shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-red-400/70" />
-            <span className="w-2 h-2 rounded-full bg-amber-400/70" />
-            <span className="w-2 h-2 rounded-full bg-emerald-400/70" />
-            <span className="text-[10px] font-mono text-text-tertiary ml-1.5 font-medium">
-              {project.title.toLowerCase().replace(/[^a-z0-9]/g, "")}.io
-            </span>
-          </div>
-
-          {project.role && (
-            <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-medium text-text-secondary bg-surface/90 backdrop-blur-md px-2.5 py-1 rounded-full border border-border">
+        {project.role && (
+          <div className="absolute top-3 right-3 z-20 pointer-events-none">
+            <span className="inline-flex items-center gap-1 text-[10px] font-mono font-medium text-text-secondary bg-surface/90 backdrop-blur-md px-2.5 py-1 rounded-full border border-border shadow-xs">
               {project.role}
             </span>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Project Thumbnail */}
         <img
