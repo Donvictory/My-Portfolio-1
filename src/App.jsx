@@ -1,166 +1,172 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Menu,
-  ChevronRight,
-  FileDown,
+  ArrowUpRight,
   ArrowDown,
   Github,
   Linkedin,
-  Mail,
-  Send,
-  MapPin,
   Twitter,
-  MessageCircle,
-  Terminal,
-  Layout,
-  Globe,
-  Cpu,
-  Layers,
+  Mail,
   Copy,
   Check,
-  ArrowUp,
   Sun,
   Moon,
+  ArrowUp,
+  MessageCircle,
+  Phone,
+  Send,
+  MapPin,
+  MessageSquare,
 } from "lucide-react";
 import "./index.css";
 import { projects } from "./data";
 import Sidebar from "./components/Sidebar";
-import ProjectCard from "./components/ProjectCard";
+import SelectedWorks from "./components/SelectedWorks";
 import ProjectModal from "./components/ProjectModal";
-import profilePic from "../public/projects/about-pic.jpeg";
 
-const TypewriterText = ({ text, delay = 0, onComplete, className }) => {
-  const words = text.split(" ");
-
-  let globalCharIndex = 0;
-  const wordData = words.map((word, i) => {
-    const letters = Array.from(word).map((char) => ({
-      char,
-      index: globalCharIndex++,
-    }));
-    const spaceIndex = i < words.length - 1 ? globalCharIndex++ : null;
-    return { letters, spaceIndex };
-  });
-
-  const totalChars = globalCharIndex;
-
-  const child = {
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        damping: 12,
-        stiffness: 200,
-        delay: delay + i * 0.03,
-      },
-    }),
-    hidden: {
-      opacity: 0,
-      y: 10,
-    },
-  };
-
-  return (
-    <span className={className}>
-      {wordData.map((word, wordIdx) => (
-        <span key={wordIdx} className="inline-block whitespace-nowrap">
-          {word.letters.map((l, letterIdx) => (
-            <motion.span
-              key={letterIdx}
-              custom={l.index}
-              variants={child}
-              initial="hidden"
-              animate="visible"
-              onAnimationComplete={
-                l.index === totalChars - 1 ? onComplete : undefined
-              }
-              className="inline-block"
-            >
-              {l.char}
-            </motion.span>
-          ))}
-          {word.spaceIndex !== null && (
-            <motion.span
-              key="space"
-              custom={word.spaceIndex}
-              variants={child}
-              initial="hidden"
-              z
-              animate="visible"
-              onAnimationComplete={
-                word.spaceIndex === totalChars - 1 ? onComplete : undefined
-              }
-              className="inline-block"
-            >
-              {"\u00A0"}
-            </motion.span>
-          )}
-        </span>
-      ))}
-    </span>
-  );
-};
+gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [filter, setFilter] = useState("all");
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeSection, setActiveSection] = useState("intro");
-  const [showHeroButtons, setShowHeroButtons] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [phoneCopied, setPhoneCopied] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    category: "Full-Time Role",
+    message: "",
+  });
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  
+  // Default theme is explicitly 'light'
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("theme") || "light"
+  );
+
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    if (theme === "light") {
-      document.documentElement.classList.add("light");
-    } else {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
       document.documentElement.classList.remove("light");
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
     }
     localStorage.setItem("theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  const filteredProjects = projects.filter((p) =>
-    filter === "all" ? true : p.tags.includes(filter),
-  );
-
-  const sectionRefs = {
-    intro: useRef(null),
-    expertise: useRef(null),
-    works: useRef(null),
-    about: useRef(null),
-    connect: useRef(null),
-    approach: useRef(null),
-    experience: useRef(null),
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
   const navItems = [
-    { id: "intro", label: "Home" },
-    { id: "expertise", label: "Expertise" },
-    { id: "approach", label: "Method" },
+    { id: "intro", label: "Index" },
+    { id: "works", label: "Selected Works" },
+    { id: "expertise", label: "Capabilities" },
     { id: "experience", label: "Experience" },
-    { id: "works", label: "Projects" },
-    { id: "about", label: "About Me" },
+    { id: "about", label: "About" },
     { id: "connect", label: "Contact" },
   ];
 
+  // GSAP Animations with ScrollTrigger
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // 1. Hero Initial Mount Reveal
+      gsap.from(".hero-anim", {
+        y: 25,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.12,
+        ease: "power3.out",
+        clearProps: "all",
+      });
+
+      // 2. Selected Works Cards Scroll Reveal
+      gsap.from(".project-card", {
+        scrollTrigger: {
+          trigger: "#works",
+          start: "top 80%",
+        },
+        y: 35,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.15,
+        ease: "power2.out",
+        clearProps: "all",
+      });
+
+      // 3. Capabilities Bento Matrix Reveal
+      gsap.from(".capability-card", {
+        scrollTrigger: {
+          trigger: "#expertise",
+          start: "top 80%",
+        },
+        y: 30,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out",
+        clearProps: "all",
+      });
+
+      // 4. Experience Ledger Rows Reveal
+      gsap.from(".experience-row", {
+        scrollTrigger: {
+          trigger: "#experience",
+          start: "top 80%",
+        },
+        y: 20,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.12,
+        ease: "power2.out",
+        clearProps: "all",
+      });
+
+      // 5. About Section Reveal
+      gsap.from(".about-anim", {
+        scrollTrigger: {
+          trigger: "#about",
+          start: "top 80%",
+        },
+        y: 25,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.14,
+        ease: "power2.out",
+        clearProps: "all",
+      });
+
+      // 6. Contact Cards Reveal
+      gsap.from(".contact-anim", {
+        scrollTrigger: {
+          trigger: "#connect",
+          start: "top 95%",
+          once: true,
+        },
+        y: 20,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: "power2.out",
+        clearProps: "all",
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Section Observer for Active Navigation Highlight
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-30% 0px -30% 0px",
+      rootMargin: "-20% 0px -40% 0px",
       threshold: 0,
     };
 
@@ -172,16 +178,18 @@ function App() {
       });
     }, observerOptions);
 
-    Object.values(sectionRefs).forEach((ref) => {
-      if (ref.current) observer.observe(ref.current);
-    });
+    const sections = containerRef.current?.querySelectorAll("section[id]");
+    if (sections) {
+      sections.forEach((section) => observer.observe(section));
+    }
 
     return () => observer.disconnect();
   }, []);
 
+  // Scroll to top button visibility
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 1000);
+      setShowScrollTop(window.scrollY > 600);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -193,828 +201,661 @@ function App() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
+  const copyPhone = () => {
+    navigator.clipboard.writeText("+2349091735644");
+    setPhoneCopied(true);
+    setTimeout(() => setPhoneCopied(false), 2000);
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 60, damping: 20 },
-    },
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    const mailtoSubject = encodeURIComponent(
+      `[Portfolio Inquiry - ${formData.category}] from ${formData.name}`
+    );
+    const mailtoBody = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\nInquiry Type: ${formData.category}\n\nMessage:\n${formData.message}`
+    );
+    window.open(
+      `mailto:donvictoryadewumi4@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`,
+      "_blank"
+    );
+    setFormSubmitted(true);
+    setTimeout(() => setFormSubmitted(false), 5000);
   };
 
   return (
-    <div className="bg-portfolio-bg min-h-screen selection:bg-accent/30 selection:text-white relative font-sans">
-      <div className="fixed inset-0 grain-overlay z-[100]" />
-      <div className="cinematic-glow" />
-
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-accent z-[110] origin-left"
-        style={{ scaleX }}
-      />
-
-      <nav className="fixed top-0 w-full p-6 lg:px-12 lg:py-8 flex justify-between items-center z-50">
-        <motion.h2
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="text-2xl font-black font-display tracking-tighter text-accent"
-        >
-          DA.
-        </motion.h2>
-
-        <div className="hidden lg:flex items-center gap-10 bg-glass-bg backdrop-blur-xl border border-glass-border px-8 py-3 rounded-2xl">
-          {navItems.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:text-accent ${
-                activeSection === item.id ? "text-accent" : "text-dim"
-              }`}
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-4">
-          <button
-            onClick={toggleTheme}
-            className="p-2.5 rounded-2xl bg-glass-bg border border-glass-border text-dim hover:text-accent transition-all backdrop-blur-md"
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-
+    <div ref={containerRef} className="bg-bg min-h-screen font-sans text-text-primary antialiased selection:bg-accent selection:text-accent-contrast">
+      {/* Fixed Header */}
+      <header className="sticky top-0 z-50 bg-bg/85 backdrop-blur-md border-b border-border">
+        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <a
-            href="/cv.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden lg:flex btn-human btn-human-secondary py-2 px-6 !text-[9px]"
+            href="#intro"
+            className="flex items-center gap-2.5 text-sm font-semibold tracking-tight text-text-primary hover:opacity-80 transition-opacity"
           >
-            CV <FileDown size={14} className="ml-2" />
+            <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-xs" />
+            <span>Donvictory Adewumi</span>
+            <span className="hidden sm:inline-block text-text-tertiary font-mono text-xs font-normal">
+              / Frontend Engineer
+            </span>
           </a>
 
-          <motion.button
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            onClick={() => setIsSidebarOpen(true)}
-            className="lg:hidden group flex items-center gap-3 py-2.5 px-5 rounded-2xl bg-glass-bg border border-glass-border text-dim hover:text-accent transition-all backdrop-blur-md"
-          >
-            <Menu size={20} />
-          </motion.button>
-        </div>
-      </nav>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-6">
+            {navItems.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className={`text-xs font-medium transition-colors ${
+                  activeSection === item.id
+                    ? "text-text-primary font-semibold"
+                    : "text-text-secondary hover:text-text-primary"
+                }`}
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
 
+          {/* Controls */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-subtle transition-colors border border-border"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
+            </button>
+
+            <a
+              href="/Donvic cv (2).pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-subtle hover:bg-surface-hover border border-border text-text-primary transition-colors"
+            >
+              CV <ArrowUpRight size={13} className="text-text-tertiary" />
+            </a>
+
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="md:hidden w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border"
+              aria-label="Open menu"
+            >
+              <Menu size={16} />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Drawer */}
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
         activeSection={activeSection}
       />
 
-      <main className="max-w-6xl mx-auto px-6 lg:px-0">
+      {/* Main Container */}
+      <main className="max-w-5xl mx-auto px-6 divide-y divide-border">
+        
+        {/* ========================================================== */}
+        {/* 1. HERO SECTION */}
+        {/* ========================================================== */}
         <section
           id="intro"
-          ref={sectionRefs.intro}
-          className="min-h-screen flex flex-col justify-center items-center text-center relative pt-24 lg:pt-0"
+          className="pt-20 pb-24 sm:pt-28 sm:pb-32 space-y-10"
         >
-          <div className="space-y-8 max-w-4xl px-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-glass-bg border border-glass-border text-accent font-bold text-[9px] uppercase tracking-[0.3em] backdrop-blur-md"
-            >
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent"></span>
-              </span>
-              Frontend Engineer & Designer
-            </motion.div>
+          <div className="space-y-6 max-w-3xl">
+            <div className="hero-anim flex items-center gap-2">
+              <span className="mono-label">Lagos, Nigeria</span>
+              <span className="text-text-tertiary font-mono text-xs">•</span>
+              <span className="mono-label text-emerald-600 dark:text-emerald-400 font-semibold">Available for Work</span>
+            </div>
 
-            <h1 className="text-4xl lg:text-6xl xl:text-7xl font-black font-display leading-[1.1] text-cream">
-              <TypewriterText text="Hello, I'm" className="block" delay={0.2} />
-              <TypewriterText
-                text="Donvictory Adewumi."
-                delay={0.8}
-                className="gradient-text italic block mt-4"
-              />
+            <h1 className="hero-anim text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-text-primary leading-[1.12]">
+              Building reliable, high-performance web systems with mathematical precision and thoughtful design.
             </h1>
 
-            <div className="max-w-lg mx-auto pb-6">
-              <TypewriterText
-                text="I build scalable web products that solve real problems, transforming ideas into systems people can rely on."
-                delay={2.0}
-                onComplete={() => setShowHeroButtons(true)}
-                className="block text-base lg:text-lg text-dim font-medium leading-relaxed italic opacity-80"
-              />
-            </div>
-
-            <div className="min-h-[80px]">
-              <AnimatePresence>
-                {showHeroButtons && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.6, type: "spring" }}
-                    className="flex flex-wrap justify-center gap-4 pt-4"
-                  >
-                    <a
-                      href="#works"
-                      className="btn-human btn-human-primary min-w-[170px]"
-                    >
-                      Projects <ChevronRight size={16} />
-                    </a>
-                    <a
-                      href="/cv.html"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-human btn-human-secondary min-w-[170px]"
-                    >
-                      Resume <FileDown size={16} />
-                    </a>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: showHeroButtons ? 1 : 0 }}
-            className="absolute bottom-10 flex flex-col items-center gap-3 text-dim/40 pointer-events-none"
-          >
-            <span className="text-[9px] uppercase tracking-[0.4em] font-bold">
-              Begin Journey
-            </span>
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 2.5 }}
-            >
-              <ArrowDown size={16} />
-            </motion.div>
-          </motion.div>
-        </section>
-
-        <section className="py-24 border-y border-white/5 relative overflow-hidden">
-          <div className="absolute inset-0 bg-white/[0.01]" />
-          <div className="max-w-6xl mx-auto px-6 relative z-10">
-            <p className="text-[10px] font-bold tracking-[0.4em] text-dim/30 uppercase text-center mb-12">
-              Technical Stack & Strategic Tools
+            <p className="hero-anim text-base sm:text-lg text-text-secondary leading-relaxed max-w-2xl font-normal">
+              Frontend Developer specializing in React and Next.js, combining analytical thinking with a user-focused approach to build scalable, pixel-accurate web applications. Experienced in translating product requirements and designs into clean interfaces, maintainable architecture, and reliable user experiences.
             </p>
-            <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-10 grayscale hover:grayscale-0 hover:opacity-40 transition-all duration-700">
-              {[
-                "React",
-                "Next.js",
-                "Tailwind",
-                "Figma",
-                "Vercel",
-                "GitHub",
-              ].map((tech) => (
-                <span
-                  key={tech}
-                  className="text-2xl md:text-4xl font-black font-display tracking-tighter text-cream"
-                >
-                  {tech.toUpperCase()}
-                </span>
-              ))}
-            </div>
+          </div>
+
+          <div className="hero-anim flex flex-wrap items-center gap-4 pt-2">
+            <a href="#works" className="btn-minimal-primary">
+              View Selected Works <ArrowDown size={14} />
+            </a>
+            <a
+              href="/Donvic cv (2).pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-minimal-secondary"
+            >
+              Read Resume / CV <ArrowUpRight size={14} />
+            </a>
+            <button
+              onClick={copyEmail}
+              className="btn-minimal-secondary"
+            >
+              {copied ? (
+                <>
+                  <Check size={14} className="text-emerald-500" /> Copied Email
+                </>
+              ) : (
+                <>
+                  <Copy size={14} /> Copy Email
+                </>
+              )}
+            </button>
           </div>
         </section>
 
-        <section id="expertise" ref={sectionRefs.expertise} className="py-10">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="space-y-20"
-          >
-            <div className="text-center space-y-4">
-              <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-60">
-                The Toolkit
-              </h2>
-              <h3 className="text-4xl lg:text-6xl font-bold font-display text-cream">
-                Expertise.
-              </h3>
-            </div>
+        {/* ========================================================== */}
+        {/* 2. SELECTED WORKS (REVAMPED SHOWCASE + INDEX TABLE) */}
+        {/* ========================================================== */}
+        <SelectedWorks
+          projects={projects}
+          onSelectProject={setSelectedProject}
+        />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                {
-                  title: "Frontend Architecture",
-                  desc: "Designing scalable, component-driven systems using React and modern state management. Focused on performance and maintainability.",
-                  icon: <Layout className="text-accent" size={32} />,
-                },
-                {
-                  title: "Strategic API Design",
-                  desc: "Bridging the gap between complex data and intuitive UI. Expert at implementing clean, reliable API integrations and data flows.",
-                  icon: <Globe className="text-accent" size={32} />,
-                },
-                {
-                  title: "Deployment Strategy",
-                  desc: "Streamlining the path to production with automated workflows, CI/CD pipelines, and high-performance hosting environments.",
-                  icon: <Cpu className="text-accent" size={32} />,
-                },
-                {
-                  title: "System Thinking",
-                  desc: "Approaching every project as a cohesive ecosystem. I build with the 'big picture' in mind to ensure long-term scalability.",
-                  icon: <Layers className="text-accent" size={32} />,
-                },
-              ].map((box, i) => (
-                <motion.div
-                  key={i}
-                  variants={itemVariants}
-                  className="glass-card group p-10 hover:border-accent/30 transition-all"
-                >
-                  <div className="mb-6 opacity-40 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-110">
-                    {box.icon}
-                  </div>
-                  <h4 className="text-xl font-bold font-display text-cream mb-4">
-                    {box.title}
-                  </h4>
-                  <div className="text-dim text-sm leading-relaxed group-hover:text-cream/80 transition-colors">
-                    {box.desc}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+        {/* ========================================================== */}
+        {/* 3. CAPABILITIES / TECHNICAL EXPERTISE */}
+        {/* ========================================================== */}
+        <section id="expertise" className="py-20 sm:py-28 space-y-12">
+          <div className="space-y-1.5">
+            <span className="mono-label">Discipline</span>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
+              Engineering Capabilities
+            </h2>
+          </div>
 
-            <div className="flex flex-wrap justify-center gap-3 pt-4">
-              {[
-                "React",
-                "JavaScript",
-                "Tailwind",
-                "Motion",
-                "TypeScript",
-                "Node.js",
-                "Git",
-                "Figma",
-              ].map((skill, i) => (
-                <motion.span
-                  key={skill}
-                  variants={itemVariants}
-                  className="px-6 py-2.5 rounded-2xl bg-glass-bg border border-glass-border text-dim font-bold text-xs hover:border-accent hover:text-accent transition-all cursor-default"
-                >
-                  {skill}
-                </motion.span>
-              ))}
-            </div>
-          </motion.div>
-        </section>
-
-        <section
-          id="approach"
-          ref={sectionRefs.approach}
-          className="py-10 relative overflow-hidden"
-        >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-accent/5 rounded-full blur-[120px] -z-10" />
-
-          <div className="space-y-20">
-            <div className="text-center space-y-1">
-              <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-50">
-                The Methodology
-              </h2>
-              <h3 className="text-4xl lg:text-6xl font-bold font-display text-cream/90">
-                My Approach.
-              </h3>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  step: "01",
-                  title: "Strategy First",
-                  desc: "I don't just write code; I look at the problem. We define the 'why' before the 'how' to ensure every pixel serves a purpose.",
-                },
-                {
-                  step: "02",
-                  title: "Intuitive Design",
-                  desc: "Complexity is the enemy of usability. I build interfaces that feel natural, reducing friction and guiding users effortlessly.",
-                },
-                {
-                  step: "03",
-                  title: "Scalable Architecture",
-                  desc: "Using modern tools like React and Tailwind, I create systems that are modular, maintainable, and ready to grow with your vision.",
-                },
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.2 }}
-                  className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 hover:border-accent/30 transition-all group"
-                >
-                  <span className="text-6xl font-black font-display text-accent/10 group-hover:text-accent/20 transition-colors block mb-6">
-                    {item.step}
-                  </span>
-                  <h4 className="text-2xl font-bold font-display text-cream/90 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[
+              {
+                idx: "01",
+                title: "Frontend Architecture",
+                desc: "Modular, component-driven design in React and Next.js. Focus on strict typing, efficient state hierarchies, and predictable data mutation.",
+                stack: ["React 19", "Next.js", "TypeScript", "Vite", "Component Systems"],
+              },
+              {
+                idx: "02",
+                title: "Interaction & UI Engineering",
+                desc: "Responsive web styling using modern CSS and Tailwind, enhanced with intentional micro-interactions and strict accessibility standards.",
+                stack: ["Tailwind CSS", "Framer Motion", "Vanilla CSS", "WCAG AA"],
+              },
+              {
+                idx: "03",
+                title: "Data Flow & API Integration",
+                desc: "Connecting user interfaces with backend RESTful services, WebExtensions APIs, caching patterns, and optimistic UI updates.",
+                stack: ["REST APIs", "Async Patterns", "WebExtensions", "Browser Storage"],
+              },
+              {
+                idx: "04",
+                title: "Mathematical Problem Solving",
+                desc: "Applying computational discrete mathematics and graph theory from UNILAG to architect logical algorithms and solve system constraints.",
+                stack: ["Algorithmic Logic", "Data Structures", "Analytical Modeling"],
+              },
+            ].map((item) => (
+              <div
+                key={item.idx}
+                className="capability-card minimal-card p-6 sm:p-8 space-y-5 flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <span className="mono-label text-text-tertiary">{item.idx}</span>
+                  <h3 className="text-lg font-semibold tracking-tight text-text-primary">
                     {item.title}
-                  </h4>
-                  <p className="text-dim/80 text-sm leading-relaxed group-hover:text-cream/70 transition-colors">
+                  </h3>
+                  <p className="text-sm text-text-secondary leading-relaxed">
                     {item.desc}
                   </p>
-                </motion.div>
-              ))}
+                </div>
+
+                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border">
+                  {item.stack.map((tag) => (
+                    <span
+                      key={tag}
+                      className="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-subtle border border-border text-text-tertiary"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ========================================================== */}
+        {/* 4. EXPERIENCE & EDUCATION (EDITORIAL LEDGER) */}
+        {/* ========================================================== */}
+        <section id="experience" className="py-20 sm:py-28 space-y-12">
+          <div className="space-y-1.5">
+            <span className="mono-label">History</span>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
+              Experience & Education
+            </h2>
+          </div>
+
+          <div className="divide-y divide-border border-y border-border">
+            {[
+              {
+                year: "2024 — Present",
+                role: "Frontend Engineer (Contract)",
+                org: "Freelance / Open Source",
+                summary:
+                  "Designed and deployed production web applications using React, Tailwind CSS, and Framer Motion. Engineered the Terakins Global e-commerce experience, boosting mobile engagement by 40%.",
+              },
+              {
+                year: "2023 — 2024",
+                role: "Frontend Developer Trainee",
+                org: "Self-Directed Learning / Community",
+                summary:
+                  "Mastered modern JavaScript frameworks and responsive component architectures. Built mission-driven platforms including Naija Tax Guide (1,000+ early users) and DriftCare NG.",
+              },
+              {
+                year: "2021 — 2025",
+                role: "B.Sc. Mathematics",
+                org: "University of Lagos (UNILAG)",
+                summary:
+                  "Comprehensive study of computational logic, discrete mathematics, and numerical algorithms, establishing a strong foundation for software design and system architecture.",
+              },
+            ].map((entry, idx) => (
+              <div
+                key={idx}
+                className="experience-row py-8 grid grid-cols-1 md:grid-cols-12 gap-4 items-start"
+              >
+                <div className="md:col-span-3 font-mono text-xs text-text-tertiary uppercase">
+                  {entry.year}
+                </div>
+                <div className="md:col-span-4 space-y-0.5">
+                  <h3 className="text-base font-semibold text-text-primary">
+                    {entry.role}
+                  </h3>
+                  <p className="text-xs font-medium text-text-secondary">
+                    {entry.org}
+                  </p>
+                </div>
+                <div className="md:col-span-5 text-sm text-text-secondary leading-relaxed">
+                  {entry.summary}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ========================================================== */}
+        {/* 5. ABOUT */}
+        {/* ========================================================== */}
+        <section id="about" className="py-20 sm:py-28 space-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
+            {/* Portrait */}
+            <div className="about-anim md:col-span-4 space-y-3">
+              <div className="aspect-[4/5] rounded-xl overflow-hidden bg-surface-subtle border border-border">
+                <img
+                  src="/projects/about-pic.jpeg"
+                  alt="Donvictory Adewumi"
+                  className="w-full h-full object-cover grayscale contrast-105"
+                />
+              </div>
+              <div className="text-xs text-text-tertiary font-mono">
+                Donvictory Adewumi // Lagos, NG
+              </div>
+            </div>
+
+            {/* Narrative */}
+            <div className="about-anim md:col-span-8 space-y-6">
+              <div className="space-y-1.5">
+                <span className="mono-label">Background</span>
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
+                  Engineering with Purpose
+                </h2>
+              </div>
+
+              <div className="space-y-4 text-text-secondary text-sm sm:text-base leading-relaxed">
+                <p>
+                  I began programming driven by a passion for decentralized technology and digital infrastructure. As I built deeper into software, I discovered that the frontend is where engineering logic meets human behavior.
+                </p>
+                <p>
+                  My goal on every project is simple: create web software that is fast, resilient, accessible, and structured to scale seamlessly over time.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-xl bg-surface-subtle border border-border space-y-2">
+                <span className="mono-label text-[10px]">Guiding Ethos</span>
+                <p className="text-xs text-text-primary italic leading-relaxed">
+                  "Every visual element should have an architectural rationale. When code is clean and interfaces are clear, user trust follows naturally."
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="experience" ref={sectionRefs.experience} className="py-10">
-          <div className="space-y-20">
-            <div className="text-center space-y-4">
-              <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-60">
-                The Journey
-              </h2>
-              <h3 className="text-4xl lg:text-6xl font-bold font-display text-cream">
-                Experience.
-              </h3>
+        {/* ========================================================== */}
+        {/* 6. CONTACT / GET IN TOUCH */}
+        {/* ========================================================== */}
+        <section id="connect" className="py-20 sm:py-28 space-y-12">
+          {/* Section Header */}
+          <div className="space-y-3 max-w-2xl">
+            <div className="flex items-center gap-2">
+              <span className="mono-label">Get in Touch</span>
+              <span className="text-text-tertiary font-mono text-xs">•</span>
+              <span className="flex items-center gap-1.5 text-xs font-mono text-emerald-600 dark:text-emerald-400 font-medium">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                Open for Opportunities
+              </span>
             </div>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-text-primary">
+              Let's Build Something Exceptional
+            </h2>
+            <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
+              Available for full-time frontend/full-stack engineering positions, contract builds, and technical collaborations. Reach out directly or send an inquiry below.
+            </p>
+          </div>
 
-            <div className="max-w-4xl mx-auto space-y-12">
-              {[
-                {
-                  year: "2024 - Present",
-                  role: "Frontend Engineer (Contract)",
-                  company: "Freelance / Open Source",
-                  desc: "Building high-performance web applications using React, Tailwind, and Framer Motion. Focused on creating intuitive user experiences and scalable frontend architectures for various clients.",
-                },
-                {
-                  year: "2023 - 2024",
-                  role: "Frontend Developer Trainee",
-                  company: "Self-Directed Learning / Community Projects",
-                  desc: "Mastered modern JavaScript frameworks and responsive design principles. Contributed to open-source projects and built a portfolio of mission-driven applications like DriftCare NG and Naija Tax Guide.",
-                },
-                {
-                  year: "2021 - 2025",
-                  role: "B.Sc. Mathematics",
-                  company: "University of Lagos",
-                  desc: "Applied analytical thinking and problem-solving skills to complex mathematical systems. Honed the logical foundation required for advanced software architecture and data structures.",
-                },
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="relative pl-12 border-l border-white/5 group"
-                >
-                  <div className="absolute left-[-1px] top-0 h-full w-[1px] bg-gradient-to-b from-accent/50 to-transparent group-hover:from-accent transition-all duration-500" />
-                  <div className="absolute left-[-5px] top-0 w-[9px] h-[9px] rounded-full bg-portfolio-bg border border-accent/50 group-hover:bg-accent transition-colors duration-500" />
-
-                  <div className="space-y-4">
-                    <span className="text-[10px] font-bold text-accent tracking-widest uppercase bg-accent/5 px-3 py-1 rounded-full border border-accent/10">
-                      {item.year}
-                    </span>
-                    <div className="space-y-1">
-                      <h4 className="text-2xl font-bold font-display text-cream">
-                        {item.role}
-                      </h4>
-                      <p className="text-dim font-bold text-sm tracking-wide">
-                        {item.company}
-                      </p>
-                    </div>
-                    <p className="text-dim/80 text-sm leading-relaxed max-w-2xl">
-                      {item.desc}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Left Column: Direct Communication Cards */}
+            <div className="lg:col-span-5 space-y-4">
+              {/* Direct Email Card */}
+              <div className="contact-anim minimal-card p-6 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-surface-subtle border border-border flex items-center justify-center text-text-primary">
+                    <Mail size={18} />
+                  </div>
+                  <div>
+                    <span className="mono-label text-[10px]">Email Address</span>
+                    <p className="text-sm font-semibold text-text-primary font-mono select-all">
+                      donvictoryadewumi4@gmail.com
                     </p>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+                </div>
 
-        <section id="works" ref={sectionRefs.works} className="py-10">
-          <div className="space-y-20">
-            <div className="flex flex-col items-center text-center space-y-6">
-              <div className="space-y-2">
-                <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-60">
-                  Curated Work
-                </h2>
-                <h3 className="text-4xl lg:text-6xl font-bold font-display text-cream">
-                  Projects.
-                </h3>
-              </div>
-
-              <div className="flex flex-wrap gap-2 p-1.5 bg-glass-bg border border-glass-border rounded-2xl backdrop-blur-md">
-                {["all", "react", "javascript"].map((f) => (
+                <div className="flex items-center gap-2 pt-1">
                   <button
-                    key={f}
-                    onClick={() => setFilter(f)}
-                    className={`px-6 py-2 rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all duration-500 ${
-                      filter === f
-                        ? "bg-accent text-portfolio-bg shadow-lg"
-                        : "text-dim hover:text-accent"
-                    }`}
+                    onClick={copyEmail}
+                    className="btn-minimal-primary !text-xs !py-2 flex-1 justify-center"
                   >
-                    {f === "javascript" ? "JS" : f}
+                    {copied ? (
+                      <>
+                        <Check size={13} className="text-emerald-400" /> Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={13} /> Copy Email
+                      </>
+                    )}
                   </button>
-                ))}
-              </div>
-            </div>
-
-            <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {filteredProjects.map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  onClick={setSelectedProject}
-                />
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
-        <section id="about" ref={sectionRefs.about} className="py-20 lg:py-40">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="lg:col-span-5 relative"
-            >
-              <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/10 group shadow-2xl">
-                <div className="absolute inset-0 bg-accent/20 group-hover:bg-transparent transition-colors duration-700 z-10" />
-                <img
-                  src={profilePic}
-                  alt="Donvictory Adewumi"
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-[1.5s] scale-110 group-hover:scale-100"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-portfolio-bg/80 via-transparent to-transparent z-20" />
-              </div>
-            </motion.div>
-
-            <div className="lg:col-span-7 space-y-12">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="space-y-8"
-              >
-                <div className="space-y-4">
-                  <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-50">
-                    The Narrative
-                  </h2>
-                  <h3 className="text-5xl lg:text-7xl font-bold font-display text-cream leading-[0.9] tracking-tighter">
-                    Behind the <br />{" "}
-                    <span className="italic gradient-text">Builder.</span>
-                  </h3>
-                </div>
-
-                <div className="flex items-center gap-6 p-1">
-                  <div className="h-px w-12 bg-accent/30" />
-                  <div className="flex flex-col">
-                    <span className="text-dim/60 text-[10px] font-bold uppercase tracking-[0.2em]">
-                      Academic Foundation
-                    </span>
-                    <span className="text-cream/80 font-display font-medium">
-                      Mathematics Graduate, University of Lagos
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="space-y-8 text-lg lg:text-xl text-dim font-medium leading-[1.8]"
-              >
-                <div className="space-y-6 relative">
-                  <div className="absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-accent/30 to-transparent" />
-                  <p>
-                    I dove into the tech space aiming to become a blockchain
-                    developer, driven by my passion for crypto. I wanted to be
-                    more than just a node operator – I wanted to be a builder.
-                  </p>
-                  <p>
-                    Along the way, I picked up front-end development, and it's
-                    been a great journey! I started with the basics –{" "}
-                    <span className="text-cream/90">
-                      HTML, CSS, and JavaScript
-                    </span>{" "}
-                    – then moved on to{" "}
-                    <span className="text-accent hover:text-accent/80 underline underline-offset-8 decoration-accent/20 transition-colors font-display italic">
-                      React and Tailwind CSS.
-                    </span>
-                  </p>
-                  <p className="text-dim/90">
-                    The learning never stops, and I'm excited to keep improving.
-                    My goal is to create innovative, scalable solutions that
-                    solve real problems.
-                  </p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="flex flex-wrap gap-4 pt-4"
-              >
-                <div className="px-6 py-3 rounded-2xl bg-glass-bg border border-glass-border text-dim/80 font-bold text-[10px] uppercase tracking-widest hover:border-accent/30 transition-all cursor-default">
-                  Blockchain Enthusiast
-                </div>
-                <div className="px-6 py-3 rounded-2xl bg-glass-bg border border-glass-border text-dim/80 font-bold text-[10px] uppercase tracking-widest hover:border-accent/30 transition-all cursor-default">
-                  Frontend Engineer
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="p-8 lg:p-10 rounded-[2.5rem] bg-glass-bg border border-glass-border space-y-6 relative overflow-hidden group shadow-sm"
-              >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-full blur-3xl -mr-12 -mt-12 group-hover:bg-accent/10 transition-colors duration-700" />
-                <h4 className="text-xs font-bold tracking-[0.3em] uppercase text-accent/70">
-                  The Principle
-                </h4>
-                <p className="text-dim/90 text-sm italic leading-relaxed relative z-10">
-                  "I believe that software should be more than just functional;
-                  it should be intuitive, resilient, and built with a deep
-                  understanding of the human problem it aims to solve. My goal
-                  is to bridge the gap between complex logic and seamless user
-                  experience."
-                </p>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="connect"
-          ref={sectionRefs.connect}
-          className="py-10 relative"
-        >
-          <div className="glass-card !p-12 lg:!p-24 overflow-hidden relative">
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-accent/10 rounded-full blur-[100px]" />
-
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div className="space-y-10">
-                <div className="space-y-4">
-                  <h2 className="text-[10px] font-bold tracking-[0.4em] text-accent uppercase opacity-60">
-                    Get in Touch
-                  </h2>
-                  <h3 className="text-5xl lg:text-8xl font-black font-display text-cream leading-[0.85] tracking-tight">
-                    Let's Build <br />
-                    <span className="gradient-text italic">Together.</span>
-                  </h3>
-                </div>
-
-                <p className="text-dim text-lg lg:text-xl font-medium leading-relaxed max-w-md">
-                  I'm currently available for new projects and collaborations.
-                  If you have any idea, let's make it a reality.
-                </p>
-
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-4 group">
-                    <div className="w-12 h-12 rounded-2xl bg-glass-bg border border-glass-border flex items-center justify-center text-dim group-hover:text-accent group-hover:border-accent/30 transition-all">
-                      <Mail size={20} />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-[10px] uppercase tracking-widest text-dim/60 font-bold">
-                        Email Me
-                      </p>
-                      <div className="flex items-center gap-3">
-                        <a
-                          href="mailto:donvictoryadewumi4@gmail.com"
-                          className="text-cream font-bold group-hover:text-accent transition-colors"
-                        >
-                          donvictoryadewumi4@gmail.com
-                        </a>
-                        <button
-                          onClick={copyEmail}
-                          className="p-2 rounded-lg bg-glass-bg border border-glass-border text-dim hover:text-accent hover:border-accent/30 transition-all"
-                          title="Copy Email"
-                        >
-                          {copied ? <Check size={14} /> : <Copy size={14} />}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 group">
-                    <div className="w-12 h-12 rounded-2xl bg-glass-bg border border-glass-border flex items-center justify-center text-dim">
-                      <MapPin size={20} />
-                    </div>
-                    <div>
-                      <p className="text-[10px] uppercase tracking-widest text-dim/60 font-bold">
-                        Location
-                      </p>
-                      <p className="text-cream font-bold">Lagos, Nigeria</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-8 lg:pl-12 lg:border-l border-glass-border">
-                <p className="text-dim font-medium italic">
-                  Seeking collaborative opportunities grounded in excellence,
-                  thoughtful design, and clear structure.
-                </p>
-
-                <div className="flex flex-col gap-4">
                   <a
-                    href="https://twitter.com/don_of_victory"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between p-6 rounded-[2rem] bg-accent/10 border border-accent/20 hover:bg-accent hover:text-portfolio-bg transition-all group"
+                    href="mailto:donvictoryadewumi4@gmail.com"
+                    className="btn-minimal-secondary !text-xs !py-2 flex-1 justify-center"
                   >
-                    <div className="flex items-center gap-4">
-                      <Twitter
-                        size={20}
-                        className="group-hover:scale-110 transition-transform"
-                      />
-                      <span className="font-black uppercase tracking-widest text-[11px]">
-                        Connect on X
-                      </span>
-                    </div>
-                    <ChevronRight
-                      size={14}
-                      className="opacity-40 group-hover:opacity-100"
-                    />
+                    Send Email <ArrowUpRight size={13} />
                   </a>
+                </div>
+              </div>
 
+              {/* Phone & WhatsApp Card */}
+              <div className="contact-anim minimal-card p-6 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-900/60 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                    <MessageCircle size={18} />
+                  </div>
+                  <div>
+                    <span className="mono-label text-[10px]">Phone & WhatsApp</span>
+                    <p className="text-sm font-semibold text-text-primary font-mono select-all">
+                      +234 909 173 5644
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 pt-1">
                   <a
                     href="https://wa.me/2349091735644"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between p-6 rounded-[2rem] bg-glass-bg border border-glass-border hover:border-accent hover:bg-glass-border transition-all group"
+                    className="btn-minimal-primary !text-xs !py-2 flex-1 justify-center bg-emerald-700 hover:bg-emerald-800 text-white border-none"
                   >
-                    <div className="flex items-center gap-4">
-                      <MessageCircle
-                        size={20}
-                        className="text-[#25D366] group-hover:scale-110 transition-transform"
-                      />
-                      <span className="font-bold uppercase tracking-widest text-[11px] text-dim group-hover:text-cream transition-colors">
-                        Message on WhatsApp
-                      </span>
-                    </div>
-                    <ChevronRight
-                      size={14}
-                      className="opacity-40 group-hover:opacity-100"
-                    />
+                    <MessageCircle size={13} /> Chat on WhatsApp
                   </a>
+                  <button
+                    onClick={copyPhone}
+                    className="btn-minimal-secondary !text-xs !py-2 flex-1 justify-center"
+                  >
+                    {phoneCopied ? (
+                      <>
+                        <Check size={13} className="text-emerald-400" /> Copied
+                      </>
+                    ) : (
+                      <>
+                        <Phone size={13} /> Copy Number
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Location & Timezone Info */}
+              <div className="contact-anim minimal-card p-6 space-y-3">
+                <div className="flex items-center gap-2.5">
+                  <MapPin size={16} className="text-text-tertiary" />
+                  <span className="text-xs font-semibold text-text-primary">
+                    Lagos, Nigeria
+                  </span>
+                  <span className="text-text-tertiary font-mono text-xs">•</span>
+                  <span className="text-xs text-text-secondary font-mono">
+                    WAT (UTC+1)
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <span className="font-mono text-[10px] uppercase px-2.5 py-1 rounded-md bg-surface-subtle border border-border text-text-secondary">
+                    Remote Worldwide
+                  </span>
+                  <span className="font-mono text-[10px] uppercase px-2.5 py-1 rounded-md bg-surface-subtle border border-border text-text-secondary">
+                    Fast Response (&lt; 24h)
+                  </span>
+                </div>
+              </div>
+
+              {/* Social Profiles */}
+              <div className="contact-anim minimal-card p-4">
+                <div className="flex items-center justify-between">
+                  <span className="mono-label text-[10px]">Profiles</span>
+                  <div className="flex items-center gap-3">
+                    <a
+                      href="https://github.com/Donvictory"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-surface-subtle hover:bg-surface-hover border border-border text-text-secondary hover:text-text-primary transition-colors"
+                      title="GitHub"
+                      aria-label="GitHub"
+                    >
+                      <Github size={15} />
+                    </a>
+                    <a
+                      href="https://linkedin.com/in/oluwasegun-donvictory-b27a87221"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-surface-subtle hover:bg-surface-hover border border-border text-text-secondary hover:text-text-primary transition-colors"
+                      title="LinkedIn"
+                      aria-label="LinkedIn"
+                    >
+                      <Linkedin size={15} />
+                    </a>
+                    <a
+                      href="https://twitter.com/don_of_victory"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-surface-subtle hover:bg-surface-hover border border-border text-text-secondary hover:text-text-primary transition-colors"
+                      title="Twitter / X"
+                      aria-label="Twitter / X"
+                    >
+                      <Twitter size={15} />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Interactive Quick Inquiry Form */}
+            <div className="lg:col-span-7 contact-anim">
+              <div className="minimal-card p-6 sm:p-8 space-y-6">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare size={16} className="text-text-tertiary" />
+                    <h3 className="text-lg font-bold text-text-primary">
+                      Send a Direct Message
+                    </h3>
+                  </div>
+                  <p className="text-xs text-text-secondary">
+                    Fill out the form below to start an email conversation immediately.
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                  <a
-                    href="https://www.linkedin.com/in/oluwasegun-donvictory-b27a87221?trk=contact-info"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center gap-4 p-4 rounded-2xl bg-glass-bg border border-glass-border hover:border-accent transition-all group"
-                  >
-                    <Linkedin
-                      size={18}
-                      className="text-dim group-hover:text-[#0077B5] transition-colors"
-                    />
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-dim">
-                      LinkedIn
-                    </span>
-                  </a>
-                  <a
-                    href="https://github.com/Donvictory"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center gap-4 p-4 rounded-2xl bg-glass-bg border border-glass-border hover:border-accent transition-all group"
-                  >
-                    <Github
-                      size={18}
-                      className="text-dim group-hover:text-cream transition-colors"
-                    />
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-dim">
-                      GitHub
-                    </span>
-                  </a>
-                </div>
+                {formSubmitted ? (
+                  <div className="p-6 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 text-center space-y-3">
+                    <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center">
+                      <Check size={24} />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-bold text-text-primary">
+                        Email Client Launched!
+                      </h4>
+                      <p className="text-xs text-text-secondary max-w-sm mx-auto">
+                        Your email draft has been prepared. If your mail client didn't open, feel free to email directly at <strong className="text-text-primary font-medium">donvictoryadewumi4@gmail.com</strong>.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleFormSubmit} className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Name */}
+                      <div className="space-y-1.5">
+                        <label className="mono-label text-[10px] block">
+                          Your Name
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Jane Doe"
+                          value={formData.name}
+                          onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                          }
+                          className="w-full px-3.5 py-2.5 rounded-lg bg-surface-subtle border border-border focus:border-border-strong text-text-primary text-xs focus:outline-none transition-colors"
+                        />
+                      </div>
+
+                      {/* Email */}
+                      <div className="space-y-1.5">
+                        <label className="mono-label text-[10px] block">
+                          Your Email
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          placeholder="jane@company.com"
+                          value={formData.email}
+                          onChange={(e) =>
+                            setFormData({ ...formData, email: e.target.value })
+                          }
+                          className="w-full px-3.5 py-2.5 rounded-lg bg-surface-subtle border border-border focus:border-border-strong text-text-primary text-xs focus:outline-none transition-colors"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Inquiry Category Pills */}
+                    <div className="space-y-1.5">
+                      <label className="mono-label text-[10px] block">
+                        Inquiry Type
+                      </label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {[
+                          "Full-Time Role",
+                          "Contract / Project",
+                          "Technical Consultation",
+                        ].map((cat) => (
+                          <button
+                            type="button"
+                            key={cat}
+                            onClick={() =>
+                              setFormData({ ...formData, category: cat })
+                            }
+                            className={`px-3 py-2 rounded-lg text-xs font-medium border text-center transition-all ${
+                              formData.category === cat
+                                ? "bg-accent text-accent-contrast border-accent font-semibold shadow-xs"
+                                : "bg-surface-subtle border-border text-text-secondary hover:text-text-primary hover:border-border-strong"
+                            }`}
+                          >
+                            {cat}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Message */}
+                    <div className="space-y-1.5">
+                      <label className="mono-label text-[10px] block">
+                        Message / Project Scope
+                      </label>
+                      <textarea
+                        required
+                        rows={4}
+                        placeholder="Tell me about the role, project goals, timeline, or technologies..."
+                        value={formData.message}
+                        onChange={(e) =>
+                          setFormData({ ...formData, message: e.target.value })
+                        }
+                        className="w-full px-3.5 py-2.5 rounded-lg bg-surface-subtle border border-border focus:border-border-strong text-text-primary text-xs focus:outline-none transition-colors resize-none"
+                      />
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      className="btn-minimal-primary w-full justify-center !py-3 !text-xs font-semibold"
+                    >
+                      <Send size={14} /> Send Message / Inquiry
+                    </button>
+                  </form>
+                )}
               </div>
             </div>
           </div>
         </section>
 
-        <footer className="py-24 border-t border-white/5 relative overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-            <div className="col-span-1 lg:col-span-2 space-y-6">
-              <div className="text-3xl font-black font-display tracking-tighter text-accent">
-                DA.
-              </div>
-              <p className="text-stone-500 text-sm leading-relaxed max-w-sm">
-                Building reliable, scalable digital systems with strategic
-                clarity and customer insight. Based in Lagos, Nigeria, Available
-                worldwide.
-              </p>
-              <div className="flex gap-4">
-                <a
-                  href="https://linkedin.com/in/donvictoryadewumi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-glass-bg border border-glass-border flex items-center justify-center text-dim hover:text-accent hover:bg-glass-border transition-all"
-                >
-                  <Linkedin size={18} />
-                </a>
-                <a
-                  href="https://github.com/Donvictory"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-glass-bg border border-glass-border flex items-center justify-center text-dim hover:text-cream hover:bg-glass-border transition-all"
-                >
-                  <Github size={18} />
-                </a>
-                <a
-                  href="mailto:donvictoryadewumi4@gmail.com"
-                  className="w-10 h-10 rounded-xl bg-glass-bg border border-glass-border flex items-center justify-center text-dim hover:text-accent hover:bg-glass-border transition-all"
-                >
-                  <Mail size={18} />
-                </a>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <h4 className="text-[10px] font-bold tracking-[0.3em] uppercase text-stone-700">
-                Platform
-              </h4>
-              <nav className="flex flex-col gap-3">
-                {navItems.map((item) => (
-                  <a
-                    key={item.id}
-                    href={`#${item.id}`}
-                    className="text-xs font-medium text-stone-500 hover:text-accent transition-colors w-fit"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </nav>
-            </div>
-
-            <div className="space-y-6">
-              <h4 className="text-[10px] font-bold tracking-[0.3em] uppercase text-stone-700">
-                Status
-              </h4>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
-                  </span>
-                  <span className="text-xs font-bold text-cream uppercase tracking-widest">
-                    Available for Hire
-                  </span>
-                </div>
-                <p className="text-stone-600 text-[10px] leading-relaxed uppercase tracking-wider font-bold">
-                  Currently accepting new <br /> collaborations for 2025.
-                </p>
-              </div>
-            </div>
+        {/* ========================================================== */}
+        {/* 7. FOOTER */}
+        {/* ========================================================== */}
+        <footer className="py-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-text-tertiary">
+          <div>
+            © {new Date().getFullYear()} Donvictory Adewumi. All rights reserved.
           </div>
-
-          <div className="mt-20 pt-8 border-t border-glass-border flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-[9px] font-bold tracking-[0.4em] text-dim/60 uppercase">
-              © 2025 Donvictory Adewumi • All Rights Reserved
-            </div>
-            <div className="text-[9px] font-bold tracking-[0.4em] text-dim/60 uppercase flex gap-6">
-              <span>Strategize</span>
-              <span>Design</span>
-              <span>Build</span>
-            </div>
+          <div className="flex items-center gap-4">
+            <span>Built with React 19, Tailwind & GSAP</span>
+            <span>•</span>
+            <a
+              href="#intro"
+              className="text-text-secondary hover:text-text-primary"
+            >
+              Back to top ↑
+            </a>
           </div>
         </footer>
       </main>
 
+      {/* Case Study Modal */}
       <ProjectModal
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
       />
 
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="fixed bottom-10 right-10 w-14 h-14 rounded-2xl bg-accent text-portfolio-bg flex items-center justify-center shadow-2xl z-[100] hover:scale-110 transition-transform group"
-          >
-            <ArrowUp
-              size={24}
-              className="group-hover:-translate-y-1 transition-transform"
-            />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Minimal Floating Back to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="fixed bottom-6 right-6 w-9 h-9 rounded-lg bg-surface border border-border text-text-secondary hover:text-text-primary flex items-center justify-center shadow-md z-40 transition-colors"
+          aria-label="Scroll to top"
+        >
+          <ArrowUp size={15} />
+        </button>
+      )}
     </div>
   );
 }

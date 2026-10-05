@@ -1,131 +1,148 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink, Github, Terminal } from "lucide-react";
+import { X, ArrowUpRight, Github } from "lucide-react";
 
 const ProjectModal = ({ project, onClose }) => {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    if (project) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [project, onClose]);
+
   return (
     <AnimatePresence>
       {project && (
-        <div className="fixed inset-0 z-[130] flex items-center justify-center p-6 lg:p-12 overflow-hidden">
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 lg:p-10 overflow-y-auto">
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="absolute inset-0 bg-portfolio-bg/90 backdrop-blur-2xl"
+            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm"
+            aria-hidden="true"
           />
 
+          {/* Modal Card */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.98, y: 30 }}
+            initial={{ opacity: 0, scale: 0.97, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.98, y: 30 }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="relative w-full max-w-5xl bg-surface border border-glass-border rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+            exit={{ opacity: 0, scale: 0.97, y: 12 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-3xl bg-surface border border-border-strong rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col z-10 my-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
           >
-            <div className="absolute inset-0 grain-overlay opacity-[0.02] pointer-events-none" />
+            {/* Header Toolbar */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface-subtle">
+              <div className="flex items-center gap-2">
+                <span className="mono-label">Case Study</span>
+                <span className="text-text-tertiary">/</span>
+                <span className="text-xs font-mono text-text-secondary">{project.title}</span>
+              </div>
+              <button
+                onClick={onClose}
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface transition-all border border-border"
+                aria-label="Close modal"
+              >
+                <X size={16} />
+              </button>
+            </div>
 
-            <button
-              onClick={onClose}
-              className="absolute top-8 right-8 w-11 h-11 flex items-center justify-center rounded-2xl bg-glass-bg backdrop-blur-md text-dim hover:text-cream hover:bg-glass-border transition-all z-20 group border border-glass-border"
-            >
-              <X
-                size={20}
-                className="group-hover:rotate-90 transition-transform duration-500"
-              />
-            </button>
-
-            <div className="overflow-y-auto w-full">
-              <div className="w-full h-80 lg:h-[450px] overflow-hidden relative border-b border-glass-border bg-portfolio-bg">
+            {/* Scrollable Body */}
+            <div className="overflow-y-auto w-full p-6 sm:p-8 space-y-8">
+              {/* Media Preview */}
+              <div className="w-full aspect-[16/9] overflow-hidden rounded-xl bg-surface-subtle border border-border relative">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top"
                 />
-                <div className="absolute inset-0 bg-portfolio-bg/40" />
-                <div className="absolute bottom-0 left-0 p-8 lg:p-14 w-full bg-gradient-to-t from-portfolio-bg to-transparent">
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="flex items-center gap-1.5 text-[9px] font-bold tracking-[0.2em] text-accent uppercase bg-accent/10 backdrop-blur-md py-1 px-4 rounded-full border border-accent/20"
-                      >
-                        <Terminal size={12} /> {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <h2 className="text-4xl lg:text-5xl font-bold font-display text-cream leading-tight tracking-tight">
-                    {project.title}
-                  </h2>
-                </div>
               </div>
 
-              <div className="p-8 lg:p-14 relative z-10 w-full">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
-                  <div className="lg:col-span-2 space-y-10">
-                    <div className="space-y-4">
-                      <h4 className="text-dim/60 font-bold uppercase tracking-[0.3em] text-[9px]">
-                        The Narrative
-                      </h4>
-                      <p className="text-dim text-lg lg:text-xl leading-relaxed italic font-medium">
-                        "{project.desc}"
-                      </p>
-                    </div>
+              {/* Title & Metadata */}
+              <div className="space-y-3">
+                <div className="flex flex-wrap gap-1.5">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-surface-subtle border border-border text-text-secondary"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <h2
+                  id="modal-title"
+                  className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary"
+                >
+                  {project.title}
+                </h2>
+              </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div className="space-y-3">
-                        <h4 className="text-dim/60 font-bold uppercase tracking-[0.3em] text-[9px]">
-                          My Role
-                        </h4>
-                        <p className="text-cream font-display font-bold text-lg">
-                          {project.role}
-                        </p>
-                      </div>
-                      <div className="space-y-3">
-                        <h4 className="text-dim/60 font-bold uppercase tracking-[0.3em] text-[9px]">
-                          Key Impact
-                        </h4>
-                        <p className="text-dim text-sm leading-relaxed">
-                          {project.impact}
-                        </p>
-                      </div>
-                    </div>
+              {/* Description & Impact */}
+              <div className="space-y-6 text-sm text-text-secondary leading-relaxed">
+                <div className="space-y-2">
+                  <h4 className="mono-label">Overview</h4>
+                  <p className="text-text-primary text-base leading-relaxed">
+                    {project.desc}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl bg-surface-subtle border border-border space-y-1">
+                    <span className="mono-label text-[10px]">Role</span>
+                    <p className="text-sm font-semibold text-text-primary">
+                      {project.role || "Lead Frontend Engineer"}
+                    </p>
                   </div>
-
-                  <div className="space-y-8">
-                    <div className="space-y-4">
-                      <h4 className="text-dim/60 font-bold uppercase tracking-[0.3em] text-[9px]">
-                        Direct Access
-                      </h4>
-                      <div className="flex flex-col gap-3">
-                        {project.live && (
-                          <a
-                            href={project.live}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-human btn-human-primary w-full py-4 text-xs font-bold"
-                          >
-                            Launch Demo <ExternalLink size={16} />
-                          </a>
-                        )}
-                        {project.code && (
-                          <a
-                            href={project.code}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-human btn-human-secondary w-full py-4 text-xs font-bold"
-                          >
-                            View Repository <Github size={16} />
-                          </a>
-                        )}
-                      </div>
-                    </div>
+                  <div className="p-4 rounded-xl bg-surface-subtle border border-border space-y-1">
+                    <span className="mono-label text-[10px]">Key Impact</span>
+                    <p className="text-xs text-text-primary leading-relaxed">
+                      {project.impact || "Delivered high performance, responsive layout, and robust conversion."}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="px-14 py-8 bg-glass-bg border-t border-glass-border flex justify-between items-center text-[9px] font-bold tracking-[0.4em] text-dim uppercase">
-                <span>Selected Works // 2025</span>
-                <span className="text-accent/20 italic">Prop. DV Adewumi</span>
+              {/* Direct Links */}
+              <div className="pt-4 border-t border-border flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  {project.live && (
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-minimal-primary"
+                    >
+                      Launch Live Product <ArrowUpRight size={14} />
+                    </a>
+                  )}
+                  {project.code && (
+                    <a
+                      href={project.code}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-minimal-secondary"
+                    >
+                      <Github size={14} /> GitHub Repository
+                    </a>
+                  )}
+                </div>
+
+                <span className="mono-label text-[10px]">
+                  Donvictory Adewumi // 2025
+                </span>
               </div>
             </div>
           </motion.div>

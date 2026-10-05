@@ -1,6 +1,30 @@
 export const projects = [
   {
     id: 1,
+    title: "PropertyJar Realty",
+    tags: ["next.js", "react", "firebase", "tailwind", "framer-motion", "typescript"],
+    role: "Full Stack Developer",
+    impact:
+      "Built a high-end luxury real estate discovery platform with dynamic listing filters and investor campaign flows, increasing property inquiry conversions by 35%.",
+    desc: "A high-end luxury real estate discovery platform featuring dynamic listing filters, immersive property showcases, investor campaign flows, and automated lead inquiry management.",
+    image: "/projects/PropertyJar.png",
+    live: "https://propertyjarrealty.com",
+    code: "https://github.com/PropertyJarRealty/propertyjarrealty",
+  },
+  {
+    id: 2,
+    title: "iMart Devices",
+    tags: ["next.js", "typescript", "supabase", "tailwind", "react"],
+    role: "Full Stack Engineer",
+    impact:
+      "Built a full-stack gadget commerce and trade-in platform featuring automated device valuation, real-time Supabase inventory sync, and animated product walkthroughs.",
+    desc: "A full-stack gadget commerce and trade-in platform featuring automated device valuation, real-time Supabase inventory sync, and animated product walkthroughs.",
+    image: "/projects/Imart Devices.png",
+    live: "https://imart-devices.tech",
+    code: "https://github.com/donvictory/TWD-Devices",
+  },
+  {
+    id: 3,
     title: "Terakins Global",
     tags: ["web", "react", "tailwind", "framer-motion"],
     role: "Lead Frontend Engineer",
@@ -10,30 +34,6 @@ export const projects = [
     image: "/projects/zoboexensions.png",
     live: "https://terakinsglobal.vercel.app/",
     code: "https://github.com/Donvictory/terakinsglobal",
-  },
-  {
-    id: 2,
-    title: "Insight Hub Extension",
-    tags: ["javascript", "browser-api", "css"],
-    role: "Full Stack Developer",
-    impact:
-      "Built a tool that reduced research time by 25% for alpha testers through automated data collation and intelligent link management.",
-    desc: "A productivity-focused browser extension designed to streamline research workflows. Features include real-time data extraction, organized link management, and a clean overlay interface. Built using modern JavaScript and the WebExtensions API for multi-browser compatibility.",
-    image: "/projects/fem challenge.png",
-    live: "https://fem-browser-extensions.vercel.app/",
-    code: "https://github.com/Donvictory/fem-challenge",
-  },
-  {
-    id: 3,
-    title: "Naija Tax Guide",
-    tags: ["javascript", "utility", "html"],
-    role: "Product Developer",
-    impact:
-      "Simplified complex tax reforms for over 1,000+ early users, facilitating better civic understanding and compliance readiness.",
-    desc: "A strategic literacy tool simplifying the 2026 Nigerian tax reforms. In under 3 minutes, users receive personalized guidance on their tax status, actionable next steps, and applicable reliefs. A mission-driven project aimed at making civic compliance accessible and transparent for every Nigerian.",
-    image: "/projects/naija-tax.png",
-    live: "https://naija-tax-siit.vercel.app/",
-    code: "https://github.com/Donvictory/naija-tax",
   },
   {
     id: 4,
@@ -46,5 +46,17 @@ export const projects = [
     image: "/projects/drift-care.png",
     live: "https://driftcare.vercel.app/",
     code: "https://github.com/Donvictory/driftcare-ng",
+  },
+  {
+    id: 5,
+    title: "Naija Tax Guide",
+    tags: ["javascript", "utility", "html"],
+    role: "Product Developer",
+    impact:
+      "Simplified complex tax reforms for over 1,000+ early users, facilitating better civic understanding and compliance readiness.",
+    desc: "A strategic literacy tool simplifying the 2026 Nigerian tax reforms. In under 3 minutes, users receive personalized guidance on their tax status, actionable next steps, and applicable reliefs. A mission-driven project aimed at making civic compliance accessible and transparent for every Nigerian.",
+    image: "/projects/naija-tax.png",
+    live: "https://naija-tax-siit.vercel.app/",
+    code: "https://github.com/Donvictory/naija-tax",
   },
 ];
