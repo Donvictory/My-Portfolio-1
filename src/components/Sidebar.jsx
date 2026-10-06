@@ -50,7 +50,7 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
           >
             <div className="space-y-8">
               {/* Header */}
-              <div className="flex justify-between items-center pb-4 border-b border-border">
+              <div className="flex justify-between items-center pb-0 border-b border-border">
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs font-bold text-text-primary tracking-wider">
                     DONVICTORY.DEV
@@ -88,9 +88,9 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
             </div>
 
             {/* Bottom Actions */}
-            <div className="space-y-4 pt-6 border-t border-border">
+            <div className="space-y-4 pt-2 border-t border-border">
               <a
-                href="/Donvic cv (2).pdf"
+                href="/cv.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-minimal-secondary w-full text-xs"
@@ -98,7 +98,7 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
                 <FileDown size={14} /> Resume (CV)
               </a>
 
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center justify-between">
                 <span className="mono-label text-[10px]">Socials</span>
                 <div className="flex items-center gap-3">
                   <a

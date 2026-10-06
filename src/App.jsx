@@ -267,7 +267,7 @@ function App() {
             </button>
 
             <a
-              href="/Donvic cv (2).pdf"
+              href="/cv.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-subtle hover:bg-surface-hover border border-border text-text-primary transition-colors"
@@ -324,7 +324,7 @@ function App() {
               View Selected Works <ArrowDown size={14} />
             </a>
             <a
-              href="/Donvic cv (2).pdf"
+              href="/cv.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-minimal-secondary"

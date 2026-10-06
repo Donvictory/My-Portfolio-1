@@ -3,7 +3,7 @@ export const projects = [
     id: 1,
     title: "PropertyJar Realty",
     tags: ["next.js", "react", "firebase", "tailwind", "framer-motion", "typescript"],
-    role: "Software Developer",
+
     impact:
       "Built a high-end luxury real estate discovery platform with dynamic listing filters and investor campaign flows, increasing property inquiry conversions by 35%.",
     desc: "A high-end luxury real estate discovery platform featuring dynamic listing filters, immersive property showcases, investor campaign flows, and automated lead inquiry management.",

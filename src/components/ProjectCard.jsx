@@ -9,13 +9,7 @@ const ProjectCard = ({ project, onClick }) => {
     >
       {/* Browser Showcase Header & Media */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-subtle border-b border-border">
-        {project.role && (
-          <div className="absolute top-3 right-3 z-20 pointer-events-none">
-            <span className="inline-flex items-center gap-1 text-[10px] font-mono font-medium text-text-secondary bg-surface/90 backdrop-blur-md px-2.5 py-1 rounded-full border border-border shadow-xs">
-              {project.role}
-            </span>
-          </div>
-        )}
+
 
         {/* Project Thumbnail */}
         <img
@@ -26,7 +20,7 @@ const ProjectCard = ({ project, onClick }) => {
         />
 
         {/* Ambient Gradient on Image Bottom */}
-        <div className="absolute inset-0 bg-gradient-to-t from-surface/80 via-transparent to-transparent pointer-events-none" />
+  
       </div>
 
       {/* Content Section */}

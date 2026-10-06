@@ -1,0 +1,23 @@
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background-color: white !important;
+  }
+  .no-print {
+    display: none;
+  }
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  .cv-container {
+    box-shadow: none !important;
+    max-width: 100% !important;
+    height: 296mm !important;
+    overflow: hidden !important;
+  }
+}
+.sidebar {
+  height: 297mm;
+}
