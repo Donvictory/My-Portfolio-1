@@ -16,9 +16,7 @@ import {
   ArrowUp,
   MessageCircle,
   Phone,
-  Send,
   MapPin,
-  MessageSquare,
 } from "lucide-react";
 import "./index.css";
 import { projects } from "./data";
@@ -35,13 +33,6 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [phoneCopied, setPhoneCopied] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    category: "Full-Time Role",
-    message: "",
-  });
-  const [formSubmitted, setFormSubmitted] = useState(false);
   
   // Default theme is explicitly 'light'
   const [theme, setTheme] = useState(
@@ -66,7 +57,7 @@ function App() {
   };
 
   const navItems = [
-    { id: "intro", label: "Index" },
+    { id: "intro", label: "Home" },
     { id: "works", label: "Selected Works" },
     { id: "expertise", label: "Capabilities" },
     { id: "experience", label: "Experience" },
@@ -205,22 +196,6 @@ function App() {
     navigator.clipboard.writeText("+2349091735644");
     setPhoneCopied(true);
     setTimeout(() => setPhoneCopied(false), 2000);
-  };
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    const mailtoSubject = encodeURIComponent(
-      `[Portfolio Inquiry - ${formData.category}] from ${formData.name}`
-    );
-    const mailtoBody = encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\nInquiry Type: ${formData.category}\n\nMessage:\n${formData.message}`
-    );
-    window.open(
-      `mailto:donvictoryadewumi4@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`,
-      "_blank"
-    );
-    setFormSubmitted(true);
-    setTimeout(() => setFormSubmitted(false), 5000);
   };
 
   return (
@@ -525,7 +500,7 @@ function App() {
         {/* ========================================================== */}
         {/* 6. CONTACT / GET IN TOUCH */}
         {/* ========================================================== */}
-        <section id="connect" className="py-20 sm:py-28 space-y-12">
+        <section id="connect" className="py-20 sm:py-28 space-y-10">
           {/* Section Header */}
           <div className="space-y-3 max-w-2xl">
             <div className="flex items-center gap-2">
@@ -540,94 +515,94 @@ function App() {
               Let's Build Something Exceptional
             </h2>
             <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-              Available for full-time frontend/full-stack engineering positions, contract builds, and technical collaborations. Reach out directly or send an inquiry below.
+              Available for full-time frontend/full-stack engineering positions, contract builds, and technical collaborations. Reach out directly via email, WhatsApp, or socials.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left Column: Direct Communication Cards */}
-            <div className="lg:col-span-5 space-y-4">
-              {/* Direct Email Card */}
-              <div className="contact-anim minimal-card p-6 space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-surface-subtle border border-border flex items-center justify-center text-text-primary">
-                    <Mail size={18} />
-                  </div>
-                  <div>
-                    <span className="mono-label text-[10px]">Email Address</span>
-                    <p className="text-sm font-semibold text-text-primary font-mono select-all">
-                      donvictoryadewumi4@gmail.com
-                    </p>
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+            {/* Direct Email Card */}
+            <div className="contact-anim minimal-card p-6 flex flex-col justify-between space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-surface-subtle border border-border flex items-center justify-center text-text-primary">
+                  <Mail size={18} />
                 </div>
-
-                <div className="flex items-center gap-2 pt-1">
-                  <button
-                    onClick={copyEmail}
-                    className="btn-minimal-primary !text-xs !py-2 flex-1 justify-center"
-                  >
-                    {copied ? (
-                      <>
-                        <Check size={13} className="text-emerald-400" /> Copied!
-                      </>
-                    ) : (
-                      <>
-                        <Copy size={13} /> Copy Email
-                      </>
-                    )}
-                  </button>
-                  <a
-                    href="mailto:donvictoryadewumi4@gmail.com"
-                    className="btn-minimal-secondary !text-xs !py-2 flex-1 justify-center"
-                  >
-                    Send Email <ArrowUpRight size={13} />
-                  </a>
+                <div>
+                  <span className="mono-label text-[10px]">Email Address</span>
+                  <p className="text-sm font-semibold text-text-primary font-mono select-all">
+                    donvictoryadewumi4@gmail.com
+                  </p>
                 </div>
               </div>
 
-              {/* Phone & WhatsApp Card */}
-              <div className="contact-anim minimal-card p-6 space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-900/60 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                    <MessageCircle size={18} />
-                  </div>
-                  <div>
-                    <span className="mono-label text-[10px]">Phone & WhatsApp</span>
-                    <p className="text-sm font-semibold text-text-primary font-mono select-all">
-                      +234 909 173 5644
-                    </p>
-                  </div>
-                </div>
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  onClick={copyEmail}
+                  className="btn-minimal-primary !text-xs !py-2 flex-1 justify-center"
+                >
+                  {copied ? (
+                    <>
+                      <Check size={13} className="text-emerald-400" /> Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={13} /> Copy Email
+                    </>
+                  )}
+                </button>
+                <a
+                  href="mailto:donvictoryadewumi4@gmail.com"
+                  className="btn-minimal-secondary !text-xs !py-2 flex-1 justify-center"
+                >
+                  Send Email <ArrowUpRight size={13} />
+                </a>
+              </div>
+            </div>
 
-                <div className="flex items-center gap-2 pt-1">
-                  <a
-                    href="https://wa.me/2349091735644"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-minimal-primary !text-xs !py-2 flex-1 justify-center bg-emerald-700 hover:bg-emerald-800 text-white border-none"
-                  >
-                    <MessageCircle size={13} /> Chat on WhatsApp
-                  </a>
-                  <button
-                    onClick={copyPhone}
-                    className="btn-minimal-secondary !text-xs !py-2 flex-1 justify-center"
-                  >
-                    {phoneCopied ? (
-                      <>
-                        <Check size={13} className="text-emerald-400" /> Copied
-                      </>
-                    ) : (
-                      <>
-                        <Phone size={13} /> Copy Number
-                      </>
-                    )}
-                  </button>
+            {/* Phone & WhatsApp Card */}
+            <div className="contact-anim minimal-card p-6 flex flex-col justify-between space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-900/60 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                  <MessageCircle size={18} />
+                </div>
+                <div>
+                  <span className="mono-label text-[10px]">Phone & WhatsApp</span>
+                  <p className="text-sm font-semibold text-text-primary font-mono select-all">
+                    +234 909 173 5644
+                  </p>
                 </div>
               </div>
 
-              {/* Location & Timezone Info */}
-              <div className="contact-anim minimal-card p-6 space-y-3">
-                <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2 pt-1">
+                <a
+                  href="https://wa.me/2349091735644"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-minimal-primary !text-xs !py-2 flex-1 justify-center bg-emerald-700 hover:bg-emerald-800 text-white border-none"
+                >
+                  <MessageCircle size={13} /> Chat on WhatsApp
+                </a>
+                <button
+                  onClick={copyPhone}
+                  className="btn-minimal-secondary !text-xs !py-2 flex-1 justify-center"
+                >
+                  {phoneCopied ? (
+                    <>
+                      <Check size={13} className="text-emerald-400" /> Copied
+                    </>
+                  ) : (
+                    <>
+                      <Phone size={13} /> Copy Number
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Location & Timezone Info */}
+            <div className="contact-anim minimal-card p-6 flex flex-col justify-between space-y-3">
+              <div className="space-y-1">
+                <span className="mono-label text-[10px]">Location & Timezone</span>
+                <div className="flex items-center gap-2.5 pt-1">
                   <MapPin size={16} className="text-text-tertiary" />
                   <span className="text-xs font-semibold text-text-primary">
                     Lagos, Nigeria
@@ -637,178 +612,56 @@ function App() {
                     WAT (UTC+1)
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  <span className="font-mono text-[10px] uppercase px-2.5 py-1 rounded-md bg-surface-subtle border border-border text-text-secondary">
-                    Remote Worldwide
-                  </span>
-                  <span className="font-mono text-[10px] uppercase px-2.5 py-1 rounded-md bg-surface-subtle border border-border text-text-secondary">
-                    Fast Response (&lt; 24h)
-                  </span>
-                </div>
               </div>
-
-              {/* Social Profiles */}
-              <div className="contact-anim minimal-card p-4">
-                <div className="flex items-center justify-between">
-                  <span className="mono-label text-[10px]">Profiles</span>
-                  <div className="flex items-center gap-3">
-                    <a
-                      href="https://github.com/Donvictory"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-lg bg-surface-subtle hover:bg-surface-hover border border-border text-text-secondary hover:text-text-primary transition-colors"
-                      title="GitHub"
-                      aria-label="GitHub"
-                    >
-                      <Github size={15} />
-                    </a>
-                    <a
-                      href="https://linkedin.com/in/oluwasegun-donvictory-b27a87221"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-lg bg-surface-subtle hover:bg-surface-hover border border-border text-text-secondary hover:text-text-primary transition-colors"
-                      title="LinkedIn"
-                      aria-label="LinkedIn"
-                    >
-                      <Linkedin size={15} />
-                    </a>
-                    <a
-                      href="https://twitter.com/don_of_victory"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-lg bg-surface-subtle hover:bg-surface-hover border border-border text-text-secondary hover:text-text-primary transition-colors"
-                      title="Twitter / X"
-                      aria-label="Twitter / X"
-                    >
-                      <Twitter size={15} />
-                    </a>
-                  </div>
-                </div>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <span className="font-mono text-[10px] uppercase px-2.5 py-1 rounded-md bg-surface-subtle border border-border text-text-secondary">
+                  Remote Worldwide
+                </span>
+                <span className="font-mono text-[10px] uppercase px-2.5 py-1 rounded-md bg-surface-subtle border border-border text-text-secondary">
+                  Fast Response (&lt; 24h)
+                </span>
               </div>
             </div>
 
-            {/* Right Column: Interactive Quick Inquiry Form */}
-            <div className="lg:col-span-7 contact-anim">
-              <div className="minimal-card p-6 sm:p-8 space-y-6">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <MessageSquare size={16} className="text-text-tertiary" />
-                    <h3 className="text-lg font-bold text-text-primary">
-                      Send a Direct Message
-                    </h3>
-                  </div>
-                  <p className="text-xs text-text-secondary">
-                    Fill out the form below to start an email conversation immediately.
-                  </p>
-                </div>
-
-                {formSubmitted ? (
-                  <div className="p-6 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 text-center space-y-3">
-                    <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center">
-                      <Check size={24} />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-sm font-bold text-text-primary">
-                        Email Client Launched!
-                      </h4>
-                      <p className="text-xs text-text-secondary max-w-sm mx-auto">
-                        Your email draft has been prepared. If your mail client didn't open, feel free to email directly at <strong className="text-text-primary font-medium">donvictoryadewumi4@gmail.com</strong>.
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <form onSubmit={handleFormSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {/* Name */}
-                      <div className="space-y-1.5">
-                        <label className="mono-label text-[10px] block">
-                          Your Name
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Jane Doe"
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
-                          }
-                          className="w-full px-3.5 py-2.5 rounded-lg bg-surface-subtle border border-border focus:border-border-strong text-text-primary text-xs focus:outline-none transition-colors"
-                        />
-                      </div>
-
-                      {/* Email */}
-                      <div className="space-y-1.5">
-                        <label className="mono-label text-[10px] block">
-                          Your Email
-                        </label>
-                        <input
-                          type="email"
-                          required
-                          placeholder="jane@company.com"
-                          value={formData.email}
-                          onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                          }
-                          className="w-full px-3.5 py-2.5 rounded-lg bg-surface-subtle border border-border focus:border-border-strong text-text-primary text-xs focus:outline-none transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Inquiry Category Pills */}
-                    <div className="space-y-1.5">
-                      <label className="mono-label text-[10px] block">
-                        Inquiry Type
-                      </label>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {[
-                          "Full-Time Role",
-                          "Contract / Project",
-                          "Technical Consultation",
-                        ].map((cat) => (
-                          <button
-                            type="button"
-                            key={cat}
-                            onClick={() =>
-                              setFormData({ ...formData, category: cat })
-                            }
-                            className={`px-3 py-2 rounded-lg text-xs font-medium border text-center transition-all ${
-                              formData.category === cat
-                                ? "bg-accent text-accent-contrast border-accent font-semibold shadow-xs"
-                                : "bg-surface-subtle border-border text-text-secondary hover:text-text-primary hover:border-border-strong"
-                            }`}
-                          >
-                            {cat}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Message */}
-                    <div className="space-y-1.5">
-                      <label className="mono-label text-[10px] block">
-                        Message / Project Scope
-                      </label>
-                      <textarea
-                        required
-                        rows={4}
-                        placeholder="Tell me about the role, project goals, timeline, or technologies..."
-                        value={formData.message}
-                        onChange={(e) =>
-                          setFormData({ ...formData, message: e.target.value })
-                        }
-                        className="w-full px-3.5 py-2.5 rounded-lg bg-surface-subtle border border-border focus:border-border-strong text-text-primary text-xs focus:outline-none transition-colors resize-none"
-                      />
-                    </div>
-
-                    {/* Submit Button */}
-                    <button
-                      type="submit"
-                      className="btn-minimal-primary w-full justify-center !py-3 !text-xs font-semibold"
-                    >
-                      <Send size={14} /> Send Message / Inquiry
-                    </button>
-                  </form>
-                )}
+            {/* Social Profiles */}
+            <div className="contact-anim minimal-card p-6 flex flex-col justify-between space-y-3">
+              <div>
+                <span className="mono-label text-[10px]">Social & Professional Profiles</span>
+                <p className="text-xs text-text-secondary pt-1">
+                  Connect or follow my engineering updates across platforms.
+                </p>
+              </div>
+              <div className="flex items-center gap-3 pt-1">
+                <a
+                  href="https://github.com/Donvictory"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2.5 rounded-lg bg-surface-subtle hover:bg-surface-hover border border-border text-text-secondary hover:text-text-primary transition-colors flex items-center gap-2 text-xs font-mono"
+                  title="GitHub"
+                  aria-label="GitHub"
+                >
+                  <Github size={15} /> GitHub
+                </a>
+                <a
+                  href="https://linkedin.com/in/oluwasegun-donvictory-b27a87221"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2.5 rounded-lg bg-surface-subtle hover:bg-surface-hover border border-border text-text-secondary hover:text-text-primary transition-colors flex items-center gap-2 text-xs font-mono"
+                  title="LinkedIn"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin size={15} /> LinkedIn
+                </a>
+                <a
+                  href="https://twitter.com/don_of_victory"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2.5 rounded-lg bg-surface-subtle hover:bg-surface-hover border border-border text-text-secondary hover:text-text-primary transition-colors flex items-center gap-2 text-xs font-mono"
+                  title="Twitter / X"
+                  aria-label="Twitter / X"
+                >
+                  <Twitter size={15} /> Twitter
+                </a>
               </div>
             </div>
           </div>

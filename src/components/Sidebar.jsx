@@ -4,7 +4,7 @@ import { X, Github, Linkedin, Twitter, FileDown } from "lucide-react";
 
 const Sidebar = ({ isOpen, onClose, activeSection }) => {
   const navItems = [
-    { id: "intro", label: "Index" },
+    { id: "intro", label: "Home" },
     { id: "works", label: "Selected Works" },
     { id: "expertise", label: "Capabilities" },
     { id: "experience", label: "Experience & Education" },
