@@ -4,11 +4,11 @@ import { ArrowUpRight, Github, TrendingUp, ExternalLink, ArrowRight } from "luci
 const ProjectCard = ({ project, onClick }) => {
   return (
     <article
-      className="project-card minimal-card flex flex-col justify-between overflow-hidden group cursor-pointer transition-all duration-300"
+      className="project-card minimal-card flex flex-col justify-between overflow-hidden group cursor-pointer"
       onClick={() => onClick(project)}
     >
       {/* Browser Showcase Header & Media */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-subtle border-b border-border">
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-subtle">
 
 
         {/* Project Thumbnail */}
@@ -20,7 +20,7 @@ const ProjectCard = ({ project, onClick }) => {
         />
 
         {/* Ambient Gradient on Image Bottom */}
-  
+
       </div>
 
       {/* Content Section */}
@@ -41,22 +41,11 @@ const ProjectCard = ({ project, onClick }) => {
               {project.desc}
             </p>
           </div>
-
-          {/* Measurable Impact Highlight */}
-          {project.impact && (
-            <div className="p-3.5 rounded-xl bg-surface-subtle border border-border text-xs text-text-secondary leading-relaxed flex items-start gap-2.5">
-              <TrendingUp size={14} className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-              <span>
-                <strong className="text-text-primary font-semibold">Key Result: </strong>
-                {project.impact}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Action Controls */}
         <div
-          className="pt-5 border-t border-border flex items-center justify-between gap-3"
+          className="pt-2 flex items-center justify-between gap-3"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center gap-2.5">
