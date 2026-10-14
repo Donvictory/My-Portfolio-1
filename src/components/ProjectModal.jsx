@@ -38,21 +38,19 @@ const ProjectModal = ({ project, onClose }) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 12 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-3xl bg-surface border border-border-strong rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col z-10 my-auto"
+            className="relative w-full max-w-3xl bg-surface border-none rounded-[4px] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col z-10 my-auto"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-title"
           >
             {/* Header Toolbar */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface-subtle">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border/50 bg-surface-subtle">
               <div className="flex items-center gap-2">
-                <span className="mono-label">Case Study</span>
-                <span className="text-text-tertiary">/</span>
                 <span className="text-xs font-mono text-text-secondary">{project.title}</span>
               </div>
               <button
                 onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface transition-all border border-border"
+                className="w-8 h-8 flex items-center justify-center rounded-[4px] text-text-secondary hover:text-text-primary hover:bg-surface transition-all"
                 aria-label="Close modal"
               >
                 <X size={16} />
@@ -62,7 +60,7 @@ const ProjectModal = ({ project, onClose }) => {
             {/* Scrollable Body */}
             <div className="overflow-y-auto w-full p-6 sm:p-8 space-y-8">
               {/* Media Preview */}
-              <div className="w-full aspect-[16/9] overflow-hidden rounded-xl bg-surface-subtle border border-border relative">
+              <div className="w-full aspect-[16/9] overflow-hidden rounded-[4px] bg-surface-subtle relative">
                 <img
                   src={project.image}
                   alt={project.title}
@@ -76,7 +74,7 @@ const ProjectModal = ({ project, onClose }) => {
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-surface-subtle border border-border text-text-secondary"
+                      className="font-mono text-[10px] uppercase px-2 py-0.5 rounded-[4px] bg-surface-subtle text-text-secondary"
                     >
                       {tag}
                     </span>
@@ -97,21 +95,6 @@ const ProjectModal = ({ project, onClose }) => {
                   <p className="text-text-primary text-base leading-relaxed">
                     {project.desc}
                   </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-xl bg-surface-subtle border border-border space-y-1">
-                    <span className="mono-label text-[10px]">Role</span>
-                    <p className="text-sm font-semibold text-text-primary">
-                      {project.role || "Lead Frontend Engineer"}
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-surface-subtle border border-border space-y-1">
-                    <span className="mono-label text-[10px]">Key Impact</span>
-                    <p className="text-xs text-text-primary leading-relaxed">
-                      {project.impact || "Delivered high performance, responsive layout, and robust conversion."}
-                    </p>
-                  </div>
                 </div>
               </div>
 
@@ -139,10 +122,6 @@ const ProjectModal = ({ project, onClose }) => {
                     </a>
                   )}
                 </div>
-
-                <span className="mono-label text-[10px]">
-                  Donvictory Adewumi // 2025
-                </span>
               </div>
             </div>
           </motion.div>

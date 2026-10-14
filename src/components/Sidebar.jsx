@@ -2,29 +2,58 @@ import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Github, Linkedin, Twitter, FileDown } from "lucide-react";
 
-const Sidebar = ({ isOpen, onClose, activeSection }) => {
+const Sidebar = ({ isOpen, onClose, activeSection, onNavigate }) => {
   const navItems = [
     { id: "intro", label: "Home" },
-    { id: "works", label: "Selected Works" },
-    { id: "expertise", label: "Capabilities" },
-    { id: "experience", label: "Experience & Education" },
+    { id: "works", label: "Projects" },
+    { id: "expertise", label: "Discipline" },
     { id: "about", label: "About" },
     { id: "connect", label: "Contact" },
   ];
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        document.body.style.overflow = "auto";
+        onClose();
+      }
     };
     if (isOpen) {
       document.body.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
+    } else {
+      document.body.style.overflow = "auto";
     }
     return () => {
       document.body.style.overflow = "auto";
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
+
+  const handleNavClick = (e, id) => {
+    e.preventDefault();
+    document.body.style.overflow = "auto";
+    onClose();
+
+    // Wait for sidebar close animation (300ms) before scrolling
+    setTimeout(() => {
+      if (onNavigate) {
+        onNavigate(id);
+      } else {
+        const target = document.getElementById(id);
+        if (target) {
+          const headerOffset = 70;
+          const elementPosition = target.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+          window.history.pushState(null, "", `#${id}`);
+        }
+      }
+    }, 350);
+  };
 
   return (
     <AnimatePresence>
@@ -36,7 +65,10 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={onClose}
+            onClick={() => {
+              document.body.style.overflow = "auto";
+              onClose();
+            }}
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
 
@@ -53,12 +85,15 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
               <div className="flex justify-between items-center pb-0 border-b border-border">
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs font-bold text-text-primary tracking-wider">
-                    DONVICTORY.DEV
+                    DONVICTORY ADEWUMI
                   </span>
                 </div>
                 <button
-                  onClick={onClose}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-subtle transition-all border border-border"
+                  onClick={() => {
+                    document.body.style.overflow = "auto";
+                    onClose();
+                  }}
+                  className="w-8 h-8 flex items-center justify-center rounded-[4px] text-text-secondary hover:text-text-primary hover:bg-surface-subtle transition-all border border-border"
                   aria-label="Close navigation"
                 >
                   <X size={16} />
@@ -66,21 +101,23 @@ const Sidebar = ({ isOpen, onClose, activeSection }) => {
               </div>
 
               {/* Navigation Links */}
-              <nav className="flex flex-col gap-1">
+              <nav className="flex flex-col gap-1.5">
                 {navItems.map((item) => {
                   const isActive = activeSection === item.id;
                   return (
                     <a
                       key={item.id}
                       href={`#${item.id}`}
-                      onClick={onClose}
-                      className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                        isActive
-                          ? "bg-surface-subtle text-text-primary font-semibold"
-                          : "text-text-secondary hover:text-text-primary hover:bg-surface-subtle"
-                      }`}
+                      onClick={(e) => handleNavClick(e, item.id)}
+                      className={`flex items-center justify-between px-3.5 py-2.5 rounded-[4px] text-sm transition-all ${isActive
+                        ? "bg-surface-subtle text-text-primary font-semibold shadow-xs border border-border/80"
+                        : "text-text-secondary hover:text-text-primary hover:bg-surface-subtle/50"
+                        }`}
                     >
                       <span>{item.label}</span>
+                      {isActive && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                      )}
                     </a>
                   );
                 })}
