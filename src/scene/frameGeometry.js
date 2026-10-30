@@ -2,9 +2,6 @@ import * as THREE from "three";
 
 const HALF_PI = Math.PI / 2;
 
-// A closed rounded rectangle in the XY plane, parameterised by arc length counter-clockwise
-// from (+halfWidth, 0). With halfWidth = halfHeight = radius it is a unit circle, so a ring and
-// a frame sampled at the same t correspond point for point, which is what the morph needs.
 class RoundedRectCurve extends THREE.Curve {
   constructor(halfWidth, halfHeight, radius) {
     super();
@@ -50,12 +47,10 @@ class RoundedRectCurve extends THREE.Curve {
       distance -= segment.length;
     }
     const last = this.segments[this.segments.length - 1];
-    return last.at(last.length, target); // float overshoot at t ≈ 1
+    return last.at(last.length, target);
   }
 }
 
-// A ring-shaped tube with one morph target: influence 0 is a unit ring, 1 is a rounded
-// rectangular frame. Both tubes share segment counts, so vertices line up one to one.
 export function createMorphingFrameGeometry({
   tube = 0.05,
   frameHalfWidth = 1.1,

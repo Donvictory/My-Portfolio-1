@@ -30,7 +30,6 @@ import { dockCards } from "./motion/magneticDock";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Loaded after the page content so three.js never delays the first paint
 const SceneCanvas = lazy(() => import("./scene/SceneCanvas"));
 
 function App() {
@@ -41,13 +40,11 @@ function App() {
   const [phoneCopied, setPhoneCopied] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // Default theme is explicitly 'light'
   const [theme, setTheme] = useState(
     () => localStorage.getItem("theme") || "light"
   );
 
   const containerRef = useRef(null);
-  // Decided once, before first paint, so the headline never flashes before its intro
   const [heroIntroMode] = useState(getHeroIntroMode);
 
   useEffect(() => {
@@ -73,11 +70,9 @@ function App() {
     { id: "connect", label: "Contact" },
   ];
 
-  // GSAP Animations with ScrollTrigger
   useEffect(() => {
     const dockCleanups = [];
     const ctx = gsap.context(() => {
-      // 1. Hero Reveal (Initial mount and scroll in/out)
       const heroElements = gsap.utils.toArray(".hero-anim");
       if (heroElements.length > 0) {
         gsap.set(heroElements, { opacity: 0, y: 24 });
@@ -122,7 +117,6 @@ function App() {
         });
       }
 
-      // 2. Capabilities Section Reveal
       const expHeader = gsap.utils.toArray(".expertise-header-anim");
       if (expHeader.length > 0) {
         gsap.set(expHeader, { opacity: 0, y: 20 });
@@ -165,10 +159,8 @@ function App() {
         });
       }
 
-      // Discipline cards dock magnetically
       dockCleanups.push(dockCards(gsap.utils.toArray(".capability-card")));
 
-      // 3. About Section Reveal
       const aboutElements = gsap.utils.toArray(".about-anim");
       if (aboutElements.length > 0) {
         gsap.set(aboutElements, { opacity: 0, y: 24 });
@@ -213,7 +205,6 @@ function App() {
         });
       }
 
-      // 4. Contact Section Reveal
       const connectHeader = gsap.utils.toArray(".connect-header-anim");
       if (connectHeader.length > 0) {
         gsap.set(connectHeader, { opacity: 0, y: 20 });
@@ -256,17 +247,14 @@ function App() {
         });
       }
 
-      // Contact cards and the About ethos card dock magnetically
       dockCleanups.push(
         dockCards(gsap.utils.toArray(".contact-anim"), { start: "top 90%", end: "bottom 5%" }),
         dockCards(gsap.utils.toArray(".ethos-card"), { start: "top 90%" })
       );
 
-      // Force calculate accurate scroll triggers after DOM render
       ScrollTrigger.refresh();
     }, containerRef);
 
-    // Watch for document layout & height shifts to keep all section triggers calibrated
     let resizeRaf = null;
     const resizeObserver = new ResizeObserver(() => {
       if (resizeRaf) cancelAnimationFrame(resizeRaf);
@@ -312,7 +300,6 @@ function App() {
     }, 800);
   };
 
-  // Scroll Position Observer for Active Navigation Highlight & Back-to-Top
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 600);
@@ -322,7 +309,7 @@ function App() {
       const sections = containerRef.current?.querySelectorAll("section[id]");
       if (!sections || sections.length === 0) return;
 
-      const scrollPosition = window.scrollY + 140; // Reference reading line below header
+      const scrollPosition = window.scrollY + 140;
 
       let currentSectionId = "";
       sections.forEach((section) => {
@@ -333,11 +320,9 @@ function App() {
         }
       });
 
-      // Edge case: near absolute top of the page
       if (window.scrollY < 200) {
         currentSectionId = "intro";
       }
-      // Edge case: scrolled to bottom of the page
       else if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60) {
         currentSectionId = "connect";
       }
@@ -367,12 +352,10 @@ function App() {
 
   return (
     <div ref={containerRef} className="min-h-screen font-sans text-text-primary antialiased selection:bg-accent selection:text-accent-contrast">
-      {/* Persistent 3D backdrop, fixed behind all content */}
       <Suspense fallback={null}>
         <SceneCanvas />
       </Suspense>
 
-      {/* Fixed Header */}
       <header className="sticky top-0 z-50 bg-bg/85 backdrop-blur-md border-b border-border">
         <div className="max-w-6xl xl:max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-16 flex items-center justify-between">
           <a
@@ -387,7 +370,6 @@ function App() {
             </span>
           </a>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1.5">
             {navItems.map((item) => {
               const isActive = activeSection === item.id;
@@ -407,7 +389,6 @@ function App() {
             })}
           </nav>
 
-          {/* Controls */}
           <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}
@@ -437,7 +418,6 @@ function App() {
         </div>
       </header>
 
-      {/* Mobile Drawer */}
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
@@ -445,23 +425,16 @@ function App() {
         onNavigate={(id) => handleNavClick(null, id)}
       />
 
-      {/* Main Container */}
       <main className="max-w-6xl xl:max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 divide-y divide-border border-x border-border/40">
 
-        {/* ========================================================== */}
-        {/* 1. HERO SECTION */}
-        {/* ========================================================== */}
         <section
           id="intro"
           className={`relative pt-14 pb-20 sm:pt-20 sm:pb-24 space-y-10 scroll-mt-20 ${hidesHeadline(heroIntroMode) ? "hero-await" : ""}`}
         >
-          {/* Companion intro overlay (first child so the section's spacing is unchanged) */}
           {heroIntroMode !== "none" && <HeroIntro mode={heroIntroMode} />}
 
           <div className="space-y-6 max-w-4xl">
             <div className="hero-anim flex items-center gap-2">
-              <span className="mono-label">Lagos, Nigeria</span>
-              <span className="text-text-tertiary font-mono text-xs">•</span>
               <span className="mono-label text-emerald-600 dark:text-emerald-400 font-semibold">Available for Work</span>
             </div>
 
@@ -507,17 +480,11 @@ function App() {
           </div>
         </section>
 
-        {/* ========================================================== */}
-        {/* 2. SELECTED WORKS (REVAMPED SHOWCASE + INDEX TABLE) */}
-        {/* ========================================================== */}
         <SelectedWorks
           projects={projects}
           onSelectProject={setSelectedProject}
         />
 
-        {/* ========================================================== */}
-        {/* 3. CAPABILITIES / TECHNICAL EXPERTISE */}
-        {/* ========================================================== */}
         <section id="expertise" className="py-10 sm:py-16 space-y-12 scroll-mt-20">
           <div className="expertise-header-anim space-y-1">
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
@@ -574,17 +541,8 @@ function App() {
           </div>
         </section>
 
-        {/* ========================================================== */}
-        {/* 4. EXPERIENCE & EDUCATION (EDITORIAL LEDGER) */}
-        {/* ========================================================== */}
-
-
-        {/* ========================================================== */}
-        {/* 5. ABOUT */}
-        {/* ========================================================== */}
         <section id="about" className="py-16 sm:py-24 space-y-12 scroll-mt-20">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14 items-start">
-            {/* Portrait */}
             <div className="about-anim md:col-span-4 space-y-3">
               <div className="aspect-[4/5] rounded-[4px] overflow-hidden bg-surface-subtle shadow-sm">
                 <img
@@ -595,7 +553,6 @@ function App() {
               </div>
             </div>
 
-            {/* Narrative */}
             <div className="about-anim md:col-span-8 space-y-6">
               <div className="space-y-1.5">
                 <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
@@ -622,11 +579,7 @@ function App() {
           </div>
         </section>
 
-        {/* ========================================================== */}
-        {/* 6. CONTACT / GET IN TOUCH */}
-        {/* ========================================================== */}
         <section id="connect" className="py-16 sm:py-24 space-y-12 scroll-mt-20">
-          {/* Section Header */}
           <div className="connect-header-anim space-y-3 max-w-2xl">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-text-primary">
               Let's Build Something Together
@@ -637,7 +590,6 @@ function App() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
-            {/* Direct Email Card */}
             <div className="contact-anim minimal-card p-6 flex flex-col justify-between space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-[4px] bg-surface-subtle flex items-center justify-center text-text-primary">
@@ -675,7 +627,6 @@ function App() {
               </div>
             </div>
 
-            {/* Phone & WhatsApp Card */}
             <div className="contact-anim minimal-card p-6 flex flex-col justify-between space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-[4px] bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
@@ -715,7 +666,6 @@ function App() {
               </div>
             </div>
 
-            {/* Location & Timezone Info */}
             <div className="contact-anim minimal-card p-6 flex flex-col justify-between space-y-3">
               <div className="space-y-1">
                 <span className="mono-label text-[10px]">Location & Timezone</span>
@@ -740,7 +690,6 @@ function App() {
               </div>
             </div>
 
-            {/* Social Profiles */}
             <div className="contact-anim minimal-card p-6 flex flex-col justify-between space-y-3">
               <div>
                 <span className="mono-label text-[10px]">Social Profiles</span>
@@ -784,9 +733,6 @@ function App() {
           </div>
         </section>
 
-        {/* ========================================================== */}
-        {/* 7. FOOTER */}
-        {/* ========================================================== */}
         <footer className="py-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-text-tertiary">
           <div>
             © {new Date().getFullYear()} Donvictory Adewumi. All rights reserved.
@@ -794,13 +740,11 @@ function App() {
         </footer>
       </main>
 
-      {/* Case Study Modal */}
       <ProjectModal
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
       />
 
-      {/* Minimal Floating Back to Top Button */}
       {showScrollTop && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

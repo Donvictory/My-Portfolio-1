@@ -8,15 +8,12 @@ const COLORS = {
   dark: { body: "#d69b78", eye: "#1b1512", shadow: "#000000", shadowOpacity: 0.45 },
 };
 
-const STRIDE = 0.36; // body heights travelled per step
+const STRIDE = 0.36;
 const BLINK_DURATION = 0.16;
 const { lerp, damp } = THREE.MathUtils;
 
 const randomBetween = (min, max) => min + Math.random() * (max - min);
 
-// Poses the rig from the intro's shared state every frame: gait from distance travelled,
-// legs solved to stay on the line, arms blended between swing, carry and reach, plus
-// breathing, blinking and the occasional idle glance.
 export default function Companion({ companion, theme, reducedMotion }) {
   const rig = useMemo(() => createCompanionRig(), []);
   const scratch = useMemo(() => ({ a: new THREE.Vector3(), b: new THREE.Vector3() }), []);
@@ -33,7 +30,6 @@ export default function Companion({ companion, theme, reducedMotion }) {
   }, [rig, theme]);
 
   useFrame(({ camera, size }, delta) => {
-    // Pixel-mapped camera: the z = 0 plane lines up 1:1 with the overlay's CSS pixels, y down
     if (camera.userData.width !== size.width || camera.userData.height !== size.height) {
       const distance = size.height / 2 / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
       camera.position.set(size.width / 2, -size.height / 2, distance);
@@ -52,8 +48,6 @@ export default function Companion({ companion, theme, reducedMotion }) {
     rig.root.position.set(s.x, -s.y, 0);
     rig.root.scale.setScalar(s.height);
 
-    // Gait advances with distance, so feet keep pace with however the timeline moves x;
-    // teleports (skip, resize) are ignored
     const moved = m.lastX === null ? 0 : Math.abs(s.x - m.lastX);
     m.lastX = s.x;
     if (moved < s.height) m.phase += (moved / (s.height * STRIDE * (1 - 0.25 * s.carry))) * Math.PI;
@@ -81,7 +75,6 @@ export default function Companion({ companion, theme, reducedMotion }) {
     m.glance = damp(m.glance, m.glanceTarget, 4, dt);
     rig.bones.head.rotation.set(s.lookPitch, s.lookYaw + m.glance, 0);
 
-    // Legs: two equal segments solved so the feet stay on the line as the body dips
     const reachDown = Math.min(HIP_HEIGHT + bodyY - FOOT_HEIGHT, 2 * LEG_SEGMENT - 1e-4);
     const bend = Math.acos(reachDown / (2 * LEG_SEGMENT));
     rig.legs.forEach((leg, i) => {
@@ -95,7 +88,6 @@ export default function Companion({ companion, theme, reducedMotion }) {
       leg.foot.rotation.set(-(hip + knee) * 0.8, 0, 0);
     });
 
-    // Arms: swing against the legs, raised overhead to carry, forward to reach and place
     rig.arms.forEach((arm, i) => {
       const swing = Math.sin(phase + (i === 0 ? Math.PI : 0)) * 0.45 * walk * (1 - s.carry);
       const pitch = lerp(lerp(swing, -2.75, s.carry), lerp(-1.15, -1.55, s.carry), s.reach);
@@ -104,7 +96,6 @@ export default function Companion({ companion, theme, reducedMotion }) {
       arm.elbow.rotation.set(lerp(-0.15, -0.35, Math.max(s.carry, s.reach)), 0, 0);
     });
 
-    // Blinks at irregular intervals; squints when happy, widens when surprised
     if (m.time > m.nextBlink) {
       m.blinkAt = m.time;
       m.nextBlink = m.time + randomBetween(2.2, 5.5);
@@ -114,7 +105,6 @@ export default function Companion({ companion, theme, reducedMotion }) {
     const open = blink * (1 - 0.55 * s.happy) * (1 + 0.22 * s.surprise);
     rig.eyes.forEach((eye) => eye.scale.set(1 + 0.12 * s.surprise, open, 1));
 
-    // The carried stack: from its resting spot on the line to the hands, as it is picked up
     const stack = s.stack;
     if (stack.el) {
       rig.root.updateMatrixWorld(true);

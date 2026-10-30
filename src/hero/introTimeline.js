@@ -1,20 +1,11 @@
 import { gsap } from "gsap";
 
-// The hero intro: a companion carries the whole headline into the real <h1>, word by word,
-// then the supporting paragraph and buttons follow. One GSAP timeline drives the companion's
-// state (read every frame by Companion.jsx), the carried words and the DOM reveals, so they
-// cannot drift apart. Everything is tweened, never set from callbacks, so jumping the
-// timeline to its end (skip, reduced motion, arriving mid-page) lands in the final state.
+const CHARACTER_HEIGHT_EM = 1.8;
+const MIN_CHARACTER_HEIGHT = 62;
+const STACK_SCALE = 0.34;
+const BASELINE_EM = 0.242;
+const LINE_PACE = [1, 0.85, 0.72, 0.62];
 
-const CHARACTER_HEIGHT_EM = 1.8; // companion height relative to the headline font size
-const MIN_CHARACTER_HEIGHT = 62; // keeps it legible (and tappable) on phones
-const STACK_SCALE = 0.34; // carried words are about a third size until placed
-const BASELINE_EM = 0.242; // Inter's descender: distance from a word box's bottom to its baseline
-const LINE_PACE = [1, 0.85, 0.72, 0.62]; // it gets quicker with each line it builds
-
-// full: plays on every load, any screen size · short: page opened below the top, final pose
-// only · static: reduced motion, final pose only · none: no WebGL
-// ("lite", a plain reveal without the companion, is the fallback when the companion fails)
 export function getHeroIntroMode() {
   if (!supportsWebGL()) return "none";
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "static";
@@ -22,20 +13,19 @@ export function getHeroIntroMode() {
   return "full";
 }
 
-// Modes in which the headline starts hidden and is revealed by the intro.
 export const hidesHeadline = (mode) => mode === "full" || mode === "lite";
 
 export const createCompanionState = () => ({
-  x: -1e4, // feet position in overlay pixels
+  x: -1e4,
   y: 0,
   height: 100,
-  facing: 0, // body yaw: −1 faces left, 0 the viewer, 1 right
-  walk: 0, // gait weight; stride follows how far x moves
+  facing: 0,
+  walk: 0,
   carry: 0,
   reach: 0,
   crouch: 0,
   lean: 0,
-  squash: 0, // + squash, − stretch
+  squash: 0,
   lookYaw: 0,
   lookPitch: 0,
   surprise: 0,
@@ -44,8 +34,6 @@ export const createCompanionState = () => ({
   stack: { el: null, x: 0, y: 0, drop: 0, attach: 0, scale: STACK_SCALE },
 });
 
-// While the headline is being built, the background scene stays quiet and holds its own
-// assembly (CameraRig and Sculpture read this flag); it resumes once the headline is complete.
 const holdScene = () => {
   document.documentElement.dataset.heroIntro = "playing";
 };
@@ -62,8 +50,6 @@ function supportsWebGL() {
   }
 }
 
-// The overlay spans the full viewport width (so the companion can walk in from the edge) and
-// the hero's height; it is positioned inside the section and scrolls with it.
 export function fitOverlay(section, overlay) {
   const sectionRect = section.getBoundingClientRect();
   Object.assign(overlay.style, {
@@ -74,8 +60,6 @@ export function fitOverlay(section, overlay) {
   return sectionRect;
 }
 
-// Word slots in overlay pixels, grouped into rendered lines. Measured relative to the <h1>,
-// so its own entrance transform cancels out.
 function measureHero(section, overlay) {
   const sectionRect = fitOverlay(section, overlay);
   const h1 = section.querySelector("h1");
@@ -106,8 +90,6 @@ function measureHero(section, overlay) {
 const lineEnd = (line) => line[line.length - 1].left + line[line.length - 1].width;
 const lineCenter = (line) => (line[0].left + lineEnd(line)) / 2;
 
-// Where the companion rests once the headline is built: on the last line's baseline, clear of
-// both the last line and the one above it (it stands taller than a line).
 function finalPose(layout) {
   const { lines } = layout;
   const line = lines[lines.length - 1];
@@ -126,8 +108,6 @@ function wordElement(slot, font, extra) {
   return el;
 }
 
-// A flyer lifts a word off the bundle and lands exactly over the real word's box. The outer
-// element carries the vertical travel, the inner one the horizontal travel and scale.
 function createFlyer(slot, font) {
   const outer = document.createElement("div");
   Object.assign(outer.style, {
@@ -146,7 +126,6 @@ function createFlyer(slot, font) {
 function supportReveal(tl, section, at) {
   const [paragraph, actions] = section.querySelectorAll(".hero-support");
   const hidden = "inset(0% 0% 100% 0%)";
-  // Ends unclipped beyond the edges so button shadows and hover lifts are never cut off
   const open = "inset(-30% -5% -60% -5%)";
   tl.addLabel("support", at);
   tl.fromTo(
@@ -165,7 +144,6 @@ function supportReveal(tl, section, at) {
   tl.set([paragraph, actions], { clipPath: "none" }, "support+=1.3");
 }
 
-// Small screens and fallbacks: no companion, the headline settles in, then the rest.
 export function createLiteReveal(section) {
   const tl = gsap.timeline({ delay: 0.2 });
   tl.fromTo(section.querySelectorAll(".hero-word"), { opacity: 0 }, { opacity: 1, duration: 0.5, stagger: 0.05, ease: "power1.out" });
@@ -188,13 +166,8 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
     color: "var(--text-primary)",
   };
   const lineHeight = parseFloat(h1Style.lineHeight) || layout.fontSize * 1.12;
-  // The companion builds each line standing a row below it, holding the bundle up near the row
-  // it is filling. While the bundle is still tall (3+ lines left) it works two rows down, so the
-  // bundle never rises over the label above the headline.
   const groundFor = (l) => layout.baseline(lines[l]) + (lines.length - l > 2 ? 2 : 1) * lineHeight;
 
-  // The bundle: the whole headline in its rendered lines, small, anchored at its base.
-  // Each line's row collapses once placed, so the bundle shrinks from the top.
   const stack = document.createElement("div");
   Object.assign(stack.style, {
     position: "absolute",
@@ -236,7 +209,6 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
     t += duration;
   };
 
-  // Anticipation, an arc that clears the higher of the two lines, a squash on landing
   const hopTo = (x, y) => {
     tl.to(companion, { crouch: 0.85, duration: 0.16, ease: "power2.in" }, t);
     tl.to(companion, { crouch: 0, squash: -0.1, duration: 0.14, ease: "power2.out" }, t + 0.16);
@@ -259,7 +231,6 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
   };
 
   const placeWord = (slot, word, { outer, inner }, pace) => {
-    // Start from wherever the word sits in the bundle at that moment (it follows the hands)
     const fromBundle = () => {
       const o = overlay.getBoundingClientRect();
       const r = word.getBoundingClientRect();
@@ -270,7 +241,6 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
     };
     const flight = 0.45 * pace;
     const lookYaw = gsap.utils.clamp(-0.6, 0.6, (slot.left + slot.width / 2 - cursorX) / (3 * H));
-    // A small upward push while looking at the word's spot
     tl.to(companion, { lookYaw, lookPitch: -0.3, squash: -0.05, duration: 0.18, ease: "power2.out" }, t);
     tl.set(word, { opacity: 0 }, t + 0.1);
     tl.set(outer, { opacity: 1 }, t + 0.1);
@@ -281,20 +251,16 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
       t + 0.1
     );
     tl.fromTo(outer, { y: () => fromBundle().y }, { y: 0, duration: flight, ease: "power2.out", immediateRender: false }, t + 0.1);
-    // The flyer lands exactly on the real word, which takes over
     tl.set(slot.el, { opacity: 1 }, t + 0.1 + flight);
     tl.set(outer, { opacity: 0 }, t + 0.1 + flight);
     tl.to(companion, { squash: 0.02, duration: 0.2 }, t + 0.28);
     t += 0.45 * pace;
   };
 
-  // Start: just off the right edge, on the row below the first line, facing left. The bundle
-  // lands past the first line's end, or against the right edge when the line fills the screen.
   const stackX = Math.min(lineEnd(lines[0]) + 0.4 * H + bundleWidth / 2, layout.width - bundleWidth / 2 - 0.4 * H);
   tl.set(companion, { x: cursorX, y: cursorY, height: H, facing: -1 }, 0);
   tl.set(companion.stack, { x: stackX, y: cursorY, drop: -0.8 * H, attach: 0 }, 0);
 
-  // Stage 1 · entrance: walk in, settle, look around, notice the headline
   walkTo(Math.min(stackX + bundleWidth / 2 + 0.9 * H, layout.width - 0.7 * H), 3.2 * H, "power2.out");
   tl.to(companion, { squash: 0.07, duration: 0.1, ease: "power2.out" }, t);
   tl.to(companion, { squash: 0, duration: 0.3, ease: "power2.inOut" }, t + 0.1);
@@ -308,7 +274,6 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
   tl.to(companion, { surprise: 0.35, squash: 0, duration: 0.4 }, t + 0.24);
   t += 0.35;
 
-  // Stage 2 · discovery: the headline, bundled, drops onto the ground beside it
   tl.fromTo(stack, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, t);
   tl.to(companion.stack, { drop: 0, duration: 0.4, ease: "power2.in" }, t);
   tl.to(companion, { lookPitch: 0.3, lookYaw: -0.15, duration: 0.35 }, t + 0.2);
@@ -320,7 +285,6 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
   tl.to(companion, { facing: 0, duration: 0.25 }, t);
   t += 0.2;
 
-  // Stage 3 · pick up: crouch, grip, gather, lift overhead with the weight showing
   tl.to(companion, { crouch: 1, reach: 1, lookPitch: 0.35, duration: 0.32, ease: "power2.inOut" }, t);
   tl.to(companion.stack, { attach: 1, duration: 0.26, ease: "power2.inOut" }, t + 0.22);
   t += 0.34;
@@ -335,8 +299,6 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
   tl.to(companion, { facing: -1, duration: 0.25 }, t);
   walkTo(lineCenter(lines[0]), 3 * H);
 
-  // Stage 4 · construction: every word into its real position, line by line, left to right.
-  // Between lines the companion hops down a row with what is left of the bundle.
   lines.forEach((line, l) => {
     const pace = LINE_PACE[Math.min(l, LINE_PACE.length - 1)];
     if (l > 0) hopTo(lineCenter(line), groundFor(l));
@@ -346,15 +308,12 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
   });
   tl.set(stack, { opacity: 0 }, t);
 
-  // Stage 6 · reaction: a small cheer, a happy squint, a nod at the finished headline
   tl.to(companion, { carry: 0.7, happy: 1, lookYaw: -0.4, lookPitch: -0.35, squash: -0.05, duration: 0.25, ease: "power2.out" }, t);
   tl.to(companion, { carry: 0, squash: 0.03, duration: 0.4, ease: "power2.inOut" }, t + 0.35);
   tl.to(companion, { lookPitch: 0.15, duration: 0.14 }, t + 0.7);
   tl.to(companion, { lookPitch: 0, lookYaw: 0, duration: 0.2 }, t + 0.84);
   t += 1.0;
 
-  // Then up beside the finished headline; the background scene resumes and the
-  // supporting content follows (Stage 5)
   const resting = finalPose(layout);
   tl.call(releaseScene, null, t);
   hopTo(resting.x, resting.y);
@@ -362,9 +321,6 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
   tl.to(companion, { facing: 0, happy: 0.25, duration: 0.3 }, t - 0.2);
   tl.set(companion, { idle: 1 }, t);
 
-  // Once the intro is over, tapping or clicking the companion gets a reaction: it looks at the
-  // pointer, then hops, spins or cheers, in turn. It sits behind the text, so the hit test is
-  // done by position; links and buttons keep their own clicks.
   let reaction = null;
   let reactionCount = 0;
   const pointerX = (event) => event.clientX - overlay.getBoundingClientRect().left;
@@ -379,7 +335,7 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
   };
   const react = (x) => {
     if (reaction?.isActive()) return;
-    const kind = reactionCount++ % 3; // 0 hop · 1 spin · 2 cheer
+    const kind = reactionCount++ % 3;
     const restY = companion.y;
     const rise = (kind === 0 ? 0.45 : 0.3) * companion.height;
     reaction = gsap.timeline({ defaults: { ease: "sine.inOut" } });
@@ -413,7 +369,6 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
     if (event.pointerType === "mouse") section.style.cursor = isOnCompanion(event) ? "pointer" : "";
   };
 
-  // Skip: any input finishes the intro at once; the companion fades back in at rest
   const inputs = ["wheel", "touchstart", "keydown", "pointerdown"];
   const finish = () => {
     if (tl.progress() === 1) return;
@@ -429,7 +384,6 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
     window.removeEventListener("scroll", onScroll);
   };
 
-  // After a resize the line breaks may move: finish, then re-measure the resting spot
   let resizeTimer;
   const onResize = () => {
     clearTimeout(resizeTimer);
@@ -451,7 +405,6 @@ export function createHeroIntro({ section, overlay, propsLayer, companion, mode 
     tl.progress(1);
     gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.6 });
   }
-  // Registered after the skip listeners, so a tap during the intro finishes it first
   window.addEventListener("pointerdown", onPoke);
   section.addEventListener("pointermove", onHover);
 

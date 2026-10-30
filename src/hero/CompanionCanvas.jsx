@@ -3,7 +3,6 @@ import { Canvas } from "@react-three/fiber";
 import Companion from "./Companion";
 import { useDocumentTheme, usePrefersReducedMotion } from "../scene/sceneTheme";
 
-// Reports a failed WebGL setup so the intro can fall back to the plain headline reveal.
 class CompanionBoundary extends Component {
   state = { failed: false };
 
@@ -33,7 +32,6 @@ export default function CompanionCanvas({ companion, active, onReady, onFail }) 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <CompanionBoundary onFail={onFail}>
-        {/* flat: no tone mapping, so the companion's colours match the page palette */}
         <Canvas
           flat
           dpr={[1, 2]}
@@ -43,7 +41,6 @@ export default function CompanionCanvas({ companion, active, onReady, onFail }) 
           onCreated={onReady}
         >
           <hemisphereLight args={[lights.sky, lights.ground, lights.hemi]} />
-          {/* light units are irrelevant to the pixel-scaled world: only the direction counts */}
           <directionalLight position={[-0.6, 1, 0.9]} color="#fff1de" intensity={lights.key} />
           <Companion companion={companion} theme={theme} reducedMotion={reducedMotion} />
         </Canvas>

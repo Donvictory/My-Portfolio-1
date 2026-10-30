@@ -1,7 +1,6 @@
 import { useSyncExternalStore } from "react";
 import * as THREE from "three";
 
-// `background` must match --bg in index.css: the fog fades geometry into the page behind the canvas.
 const PALETTES = {
   light: {
     background: "#f4efe6",

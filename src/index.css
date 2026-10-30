@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* --bg is mirrored in src/scene/sceneTheme.js: the 3D fog fades into it */
 :root {
   --bg: #f4efe6;
   --surface: #fbf9f5;
@@ -78,7 +77,6 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     line-height: 1.6;
-    /* Paper grain; the drafting grid and 3D scene are fixed layers above it, behind content */
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.032 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperGrain)'/%3E%3C/svg%3E");
     background-size: 256px 256px;
     background-attachment: fixed;
@@ -89,7 +87,6 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperGrain)'/%3E%3C/svg%3E");
   }
 
-  /* Restrained drafting grid: one wide module, masked to the hero sculpture's side of the frame */
   body::before {
     content: "";
     position: fixed;
@@ -110,8 +107,6 @@
 }
 
 @layer components {
-  /* Hero intro: words and supporting content wait for the companion; they keep their space
-     (no layout shift) and stay in the accessibility tree */
   .hero-await .hero-word {
     opacity: 0;
   }
@@ -120,8 +115,6 @@
     clip-path: inset(0 0 100% 0);
   }
 
-  /* Cables that tether docking cards to their anchor pins (src/motion/magneticDock.js).
-     Drawn behind content, so they pass under the cards above them. */
   .dock-cables {
     position: absolute;
     inset: 0;
@@ -145,7 +138,6 @@
     stroke-width: 1.25;
   }
 
-  /* Companion layer: behind the hero text, so placed words pass in front of it */
   .hero-companion {
     position: absolute;
     top: 0;
@@ -153,8 +145,6 @@
     pointer-events: none;
   }
 
-  /* Fixed 3D backdrop above the grid, below all content. lvh avoids resizing as mobile toolbars move.
-     Opacity starts at 0 and is driven by the camera rig per section. */
   .scene-layer {
     position: fixed;
     top: 0;
@@ -166,7 +156,6 @@
     opacity: 0;
   }
 
-  /* Minimalist Premium Card */
   .minimal-card {
     background-color: var(--color-surface);
     border: none;
@@ -180,7 +169,6 @@
     box-shadow: var(--card-shadow-hover);
   }
 
-  /* Monospace Micro Label */
   .mono-label {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
@@ -189,7 +177,6 @@
     color: var(--color-text-tertiary);
   }
 
-  /* Interactive Buttons */
   .btn-minimal-primary {
     display: inline-flex;
     align-items: center;
@@ -233,7 +220,6 @@
     transform: translateY(-1px);
   }
 
-  /* Status Radar Dot */
   .status-dot {
     width: 6.5px;
     height: 6.5px;
@@ -243,7 +229,6 @@
   }
 }
 
-/* Minimal Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
 }

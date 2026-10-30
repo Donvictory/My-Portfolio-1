@@ -35,7 +35,6 @@ const Sidebar = ({ isOpen, onClose, activeSection, onNavigate }) => {
     document.body.style.overflow = "auto";
     onClose();
 
-    // Wait for sidebar close animation (300ms) before scrolling
     setTimeout(() => {
       if (onNavigate) {
         onNavigate(id);
@@ -59,7 +58,6 @@ const Sidebar = ({ isOpen, onClose, activeSection, onNavigate }) => {
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[140] overflow-hidden lg:hidden">
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -72,7 +70,6 @@ const Sidebar = ({ isOpen, onClose, activeSection, onNavigate }) => {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
 
-          {/* Drawer */}
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
@@ -81,7 +78,6 @@ const Sidebar = ({ isOpen, onClose, activeSection, onNavigate }) => {
             className="absolute right-0 top-0 bottom-0 w-full max-w-xs bg-surface border-l border-border p-6 flex flex-col justify-between"
           >
             <div className="space-y-8">
-              {/* Header */}
               <div className="flex justify-between items-center pb-0 border-b border-border">
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs font-bold text-text-primary tracking-wider">
@@ -100,7 +96,6 @@ const Sidebar = ({ isOpen, onClose, activeSection, onNavigate }) => {
                 </button>
               </div>
 
-              {/* Navigation Links */}
               <nav className="flex flex-col gap-1.5">
                 {navItems.map((item) => {
                   const isActive = activeSection === item.id;
@@ -124,7 +119,6 @@ const Sidebar = ({ isOpen, onClose, activeSection, onNavigate }) => {
               </nav>
             </div>
 
-            {/* Bottom Actions */}
             <div className="space-y-4 pt-2 border-t border-border">
               <a
                 href="/cv.pdf"

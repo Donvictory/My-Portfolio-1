@@ -13,7 +13,7 @@ import { dockCards } from "../motion/magneticDock";
 gsap.registerPlugin(ScrollTrigger);
 
 const SelectedWorks = ({ projects, onSelectProject }) => {
-  const [viewMode, setViewMode] = useState("grid"); // 'grid' | 'table'
+  const [viewMode, setViewMode] = useState("grid");
   const [filter, setFilter] = useState("all");
   const worksRef = useRef(null);
 
@@ -21,8 +21,6 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
     filter === "all" ? true : p.tags.includes(filter)
   );
 
-  // Observe section height shifts (e.g. Grid <-> Table, tag filters) so all
-  // subsequent section triggers on the page immediately recalibrate their scroll positions
   useEffect(() => {
     if (!worksRef.current) return;
 
@@ -45,7 +43,6 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
   useEffect(() => {
     let releaseCards = () => {};
     const ctx = gsap.context(() => {
-      // Header reveal
       gsap.set(".works-header-anim", { opacity: 0, y: 20 });
       ScrollTrigger.create({
         trigger: "#works",
@@ -85,7 +82,6 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
           }),
       });
 
-      // Grid cards dock magnetically; the index table keeps its fade
       if (viewMode === "grid") {
         releaseCards = dockCards(gsap.utils.toArray(".project-card"));
         return;
@@ -136,7 +132,6 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
       }
     }, worksRef);
 
-    // Promptly recalculate all trigger coordinates across the page
     const rafId = requestAnimationFrame(() => {
       ScrollTrigger.refresh();
     });
@@ -154,7 +149,6 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
 
   return (
     <section ref={worksRef} id="works" className="py-12 sm:py-16 space-y-10 scroll-mt-20">
-      {/* Section Header with Controls */}
       <div className="works-header-anim flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-border">
         <div className="space-y-1.5">
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
@@ -165,9 +159,7 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
           </p>
         </div>
 
-        {/* View Switcher & Filter Controls */}
         <div className="flex flex-wrap items-center gap-3">
-          {/* Category Filter */}
           <div className="flex items-center gap-1 p-1 rounded-[4px] bg-surface-subtle border border-border">
             {[
               { id: "all", label: "All Works" },
@@ -188,7 +180,6 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
             ))}
           </div>
 
-          {/* View Mode Toggle */}
           <div className="flex items-center gap-1 p-1 rounded-[4px] bg-surface-subtle border border-border">
             <button
               onClick={() => setViewMode("grid")}
@@ -218,9 +209,6 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
         </div>
       </div>
 
-      {/* ========================================================== */}
-      {/* 1. BALANCED 2x2 GRID VIEW */}
-      {/* ========================================================== */}
       {viewMode === "grid" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
           {filteredProjects.map((project) => (
@@ -233,9 +221,6 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
         </div>
       )}
 
-      {/* ========================================================== */}
-      {/* 2. TABLE / INDEX VIEW (EDITORIAL MASTER LEDGER) */}
-      {/* ========================================================== */}
       {viewMode === "table" && (
         <div className="works-table-anim minimal-card overflow-hidden">
           <div className="overflow-x-auto">
