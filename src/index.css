@@ -1,37 +1,40 @@
 @import "tailwindcss";
 
+/* --bg is mirrored in src/scene/sceneTheme.js: the 3D fog fades into it */
 :root {
-  --bg: #fcfcfd;
-  --surface: #ffffff;
-  --surface-subtle: #f4f5f7;
-  --surface-hover: #eaecee;
-  --border: rgba(0, 0, 0, 0.08);
-  --border-strong: rgba(0, 0, 0, 0.15);
-  --border-hover: rgba(0, 0, 0, 0.3);
-  --text-primary: #111827;
-  --text-secondary: #4b5563;
-  --text-tertiary: #9ca3af;
-  --accent: #111827;
-  --accent-contrast: #ffffff;
-  --accent-glow: rgba(0, 0, 0, 0.04);
-  --badge-bg: #f0f2f5;
-  --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-  --card-shadow-hover: 0 20px 30px -10px rgba(0, 0, 0, 0.08);
+  --bg: #f4efe6;
+  --surface: #fbf9f5;
+  --surface-subtle: #eee8dd;
+  --surface-hover: #e6dfd2;
+  --border: rgba(48, 38, 22, 0.09);
+  --border-strong: rgba(48, 38, 22, 0.16);
+  --border-hover: rgba(48, 38, 22, 0.3);
+  --text-primary: #1c1a16;
+  --text-secondary: #57524a;
+  --text-tertiary: #9a9286;
+  --accent: #1c1a16;
+  --accent-contrast: #fbf9f5;
+  --accent-glow: rgba(48, 38, 22, 0.04);
+  --badge-bg: #ebe5d9;
+  --card-shadow: 0 4px 20px -2px rgba(48, 38, 22, 0.06);
+  --card-shadow-hover: 0 20px 30px -10px rgba(48, 38, 22, 0.1);
+  --grid-line: rgba(61, 55, 46, 0.055);
 }
 
 :root.dark {
-  --bg: #09090b;
-  --surface: #121215;
-  --surface-subtle: #18181c;
-  --surface-hover: #222228;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --border-hover: rgba(255, 255, 255, 0.32);
-  --text-primary: #fafafa;
-  --text-secondary: #a1a1aa;
-  --text-tertiary: #71717a;
-  --accent: #ffffff;
-  --accent-contrast: #09090b;
+  --bg: #121110;
+  --surface: #1a1917;
+  --surface-subtle: #201f1c;
+  --surface-hover: #2a2825;
+  --border: rgba(255, 250, 240, 0.08);
+  --border-strong: rgba(255, 250, 240, 0.16);
+  --border-hover: rgba(255, 250, 240, 0.32);
+  --text-primary: #f5f2ec;
+  --text-secondary: #a8a299;
+  --text-tertiary: #77716a;
+  --grid-line: rgba(255, 248, 235, 0.03);
+  --accent: #f5f2ec;
+  --accent-contrast: #121110;
   --accent-glow: rgba(255, 255, 255, 0.04);
   --badge-bg: rgba(255, 255, 255, 0.06);
   --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
@@ -75,25 +78,29 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     line-height: 1.6;
-    /* Human-crafted architectural drafting canvas: subtle paper grain + precision drafting grid */
-    background-image:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.032 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperGrain)'/%3E%3C/svg%3E"),
-      linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-      linear-gradient(to right, rgba(15, 23, 42, 0.015) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(15, 23, 42, 0.015) 1px, transparent 1px);
-    background-size: 256px 256px, 64px 64px, 64px 64px, 16px 16px, 16px 16px;
+    /* Paper grain; the drafting grid and 3D scene are fixed layers above it, behind content */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.032 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperGrain)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
     background-attachment: fixed;
     transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   :root.dark body {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperGrain)'/%3E%3C/svg%3E");
+  }
+
+  /* Restrained drafting grid: one wide module, masked to the hero sculpture's side of the frame */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
     background-image:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperGrain)'/%3E%3C/svg%3E"),
-      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-      linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 96px 96px;
+    mask-image: radial-gradient(ellipse 65% 70% at 72% 38%, #000 0%, transparent 72%);
   }
 
   ::selection {
@@ -103,6 +110,62 @@
 }
 
 @layer components {
+  /* Hero intro: words and supporting content wait for the companion; they keep their space
+     (no layout shift) and stay in the accessibility tree */
+  .hero-await .hero-word {
+    opacity: 0;
+  }
+
+  .hero-await .hero-support {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  /* Cables that tether docking cards to their anchor pins (src/motion/magneticDock.js).
+     Drawn behind content, so they pass under the cards above them. */
+  .dock-cables {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .dock-cables path {
+    fill: none;
+    stroke: var(--color-text-tertiary);
+    stroke-width: 1;
+    stroke-linecap: round;
+  }
+
+  .dock-cables circle {
+    fill: var(--color-bg);
+    stroke: var(--color-text-tertiary);
+    stroke-width: 1.25;
+  }
+
+  /* Companion layer: behind the hero text, so placed words pass in front of it */
+  .hero-companion {
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Fixed 3D backdrop above the grid, below all content. lvh avoids resizing as mobile toolbars move.
+     Opacity starts at 0 and is driven by the camera rig per section. */
+  .scene-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100lvh;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+  }
+
   /* Minimalist Premium Card */
   .minimal-card {
     background-color: var(--color-surface);

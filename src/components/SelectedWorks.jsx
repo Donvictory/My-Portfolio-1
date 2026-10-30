@@ -8,6 +8,7 @@ import {
   List,
 } from "lucide-react";
 import ProjectCard from "./ProjectCard";
+import { dockCards } from "../motion/magneticDock";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -42,6 +43,7 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
   }, []);
 
   useEffect(() => {
+    let releaseCards = () => {};
     const ctx = gsap.context(() => {
       // Header reveal
       gsap.set(".works-header-anim", { opacity: 0, y: 20 });
@@ -83,10 +85,12 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
           }),
       });
 
-      // Cards or Table reveal
-      const targets =
-        viewMode === "grid" ? ".project-card" : ".works-table-anim";
-      const elements = gsap.utils.toArray(targets);
+      // Grid cards dock magnetically; the index table keeps its fade
+      if (viewMode === "grid") {
+        releaseCards = dockCards(gsap.utils.toArray(".project-card"));
+        return;
+      }
+      const elements = gsap.utils.toArray(".works-table-anim");
 
       if (elements.length > 0) {
         gsap.set(elements, { opacity: 0, y: 24 });
@@ -143,6 +147,7 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
     return () => {
       cancelAnimationFrame(rafId);
       clearTimeout(timer);
+      releaseCards();
       ctx.revert();
     };
   }, [viewMode, filter]);

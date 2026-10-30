@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -23,8 +23,15 @@ import { projects } from "./data";
 import Sidebar from "./components/Sidebar";
 import SelectedWorks from "./components/SelectedWorks";
 import ProjectModal from "./components/ProjectModal";
+import HeroIntro from "./hero/HeroIntro";
+import HeroWords from "./hero/HeroWords";
+import { getHeroIntroMode, hidesHeadline } from "./hero/introTimeline";
+import { dockCards } from "./motion/magneticDock";
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Loaded after the page content so three.js never delays the first paint
+const SceneCanvas = lazy(() => import("./scene/SceneCanvas"));
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -40,6 +47,8 @@ function App() {
   );
 
   const containerRef = useRef(null);
+  // Decided once, before first paint, so the headline never flashes before its intro
+  const [heroIntroMode] = useState(getHeroIntroMode);
 
   useEffect(() => {
     if (theme === "dark") {
@@ -66,6 +75,7 @@ function App() {
 
   // GSAP Animations with ScrollTrigger
   useEffect(() => {
+    const dockCleanups = [];
     const ctx = gsap.context(() => {
       // 1. Hero Reveal (Initial mount and scroll in/out)
       const heroElements = gsap.utils.toArray(".hero-anim");
@@ -155,49 +165,8 @@ function App() {
         });
       }
 
-      const capCards = gsap.utils.toArray(".capability-card");
-      if (capCards.length > 0) {
-        gsap.set(capCards, { opacity: 0, y: 24 });
-        ScrollTrigger.batch(capCards, {
-          start: "top 88%",
-          end: "bottom 8%",
-          interval: 0.08,
-          onEnter: (batch) =>
-            gsap.to(batch, {
-              opacity: 1,
-              y: 0,
-              duration: 0.65,
-              stagger: 0.1,
-              ease: "power2.out",
-              overwrite: "auto",
-            }),
-          onLeave: (batch) =>
-            gsap.to(batch, {
-              opacity: 0,
-              y: -20,
-              duration: 0.35,
-              ease: "power2.in",
-              overwrite: "auto",
-            }),
-          onEnterBack: (batch) =>
-            gsap.to(batch, {
-              opacity: 1,
-              y: 0,
-              duration: 0.65,
-              stagger: 0.1,
-              ease: "power2.out",
-              overwrite: "auto",
-            }),
-          onLeaveBack: (batch) =>
-            gsap.to(batch, {
-              opacity: 0,
-              y: 24,
-              duration: 0.35,
-              ease: "power2.in",
-              overwrite: "auto",
-            }),
-        });
-      }
+      // Discipline cards dock magnetically
+      dockCleanups.push(dockCards(gsap.utils.toArray(".capability-card")));
 
       // 3. About Section Reveal
       const aboutElements = gsap.utils.toArray(".about-anim");
@@ -287,49 +256,11 @@ function App() {
         });
       }
 
-      const contactCards = gsap.utils.toArray(".contact-anim");
-      if (contactCards.length > 0) {
-        gsap.set(contactCards, { opacity: 0, y: 24 });
-        ScrollTrigger.batch(contactCards, {
-          start: "top 90%",
-          end: "bottom 5%",
-          interval: 0.08,
-          onEnter: (batch) =>
-            gsap.to(batch, {
-              opacity: 1,
-              y: 0,
-              duration: 0.6,
-              stagger: 0.08,
-              ease: "power2.out",
-              overwrite: "auto",
-            }),
-          onLeave: (batch) =>
-            gsap.to(batch, {
-              opacity: 0,
-              y: -20,
-              duration: 0.35,
-              ease: "power2.in",
-              overwrite: "auto",
-            }),
-          onEnterBack: (batch) =>
-            gsap.to(batch, {
-              opacity: 1,
-              y: 0,
-              duration: 0.6,
-              stagger: 0.08,
-              ease: "power2.out",
-              overwrite: "auto",
-            }),
-          onLeaveBack: (batch) =>
-            gsap.to(batch, {
-              opacity: 0,
-              y: 24,
-              duration: 0.35,
-              ease: "power2.in",
-              overwrite: "auto",
-            }),
-        });
-      }
+      // Contact cards and the About ethos card dock magnetically
+      dockCleanups.push(
+        dockCards(gsap.utils.toArray(".contact-anim"), { start: "top 90%", end: "bottom 5%" }),
+        dockCards(gsap.utils.toArray(".ethos-card"), { start: "top 90%" })
+      );
 
       // Force calculate accurate scroll triggers after DOM render
       ScrollTrigger.refresh();
@@ -351,6 +282,7 @@ function App() {
     return () => {
       if (resizeRaf) cancelAnimationFrame(resizeRaf);
       resizeObserver.disconnect();
+      dockCleanups.forEach((cleanup) => cleanup());
       ctx.revert();
     };
   }, []);
@@ -435,6 +367,11 @@ function App() {
 
   return (
     <div ref={containerRef} className="min-h-screen font-sans text-text-primary antialiased selection:bg-accent selection:text-accent-contrast">
+      {/* Persistent 3D backdrop, fixed behind all content */}
+      <Suspense fallback={null}>
+        <SceneCanvas />
+      </Suspense>
+
       {/* Fixed Header */}
       <header className="sticky top-0 z-50 bg-bg/85 backdrop-blur-md border-b border-border">
         <div className="max-w-6xl xl:max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-16 flex items-center justify-between">
@@ -516,8 +453,11 @@ function App() {
         {/* ========================================================== */}
         <section
           id="intro"
-          className="pt-14 pb-20 sm:pt-20 sm:pb-24 space-y-10 scroll-mt-20"
+          className={`relative pt-14 pb-20 sm:pt-20 sm:pb-24 space-y-10 scroll-mt-20 ${hidesHeadline(heroIntroMode) ? "hero-await" : ""}`}
         >
+          {/* Companion intro overlay (first child so the section's spacing is unchanged) */}
+          {heroIntroMode !== "none" && <HeroIntro mode={heroIntroMode} />}
+
           <div className="space-y-6 max-w-4xl">
             <div className="hero-anim flex items-center gap-2">
               <span className="mono-label">Lagos, Nigeria</span>
@@ -526,15 +466,15 @@ function App() {
             </div>
 
             <h1 className="hero-anim text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-text-primary leading-[1.12]">
-              Building reliable, high-performance web systems with mathematical precision and thoughtful design.
+              <HeroWords text="Building reliable, high-performance web systems with mathematical precision and thoughtful design." />
             </h1>
 
-            <p className="hero-anim text-base sm:text-lg text-text-secondary leading-relaxed max-w-3xl font-normal">
-              Frontend Developer specializing in React and Next.js, combining analytical thinking with a user-focused approach to build scalable, pixel-accurate web applications. Experienced in translating product requirements and designs into clean interfaces, maintainable architecture, and reliable user experiences.
+            <p className="hero-anim hero-support text-base sm:text-lg text-text-secondary leading-relaxed max-w-3xl font-normal">
+              Software Developer specializing in React and Next.js, combining analytical thinking with a user-focused approach to build scalable, pixel-accurate web applications. Experienced in translating product requirements and designs into clean interfaces, maintainable architecture, and reliable user experiences.
             </p>
           </div>
 
-          <div className="hero-anim flex flex-wrap items-center gap-4 pt-2">
+          <div className="hero-anim hero-support flex flex-wrap items-center gap-4 pt-2">
             <a
               href="#works"
               onClick={(e) => handleNavClick(e, "works")}
@@ -672,7 +612,7 @@ function App() {
                 </p>
               </div>
 
-              <div className="p-5 rounded-[4px] bg-surface-subtle space-y-2">
+              <div className="ethos-card p-5 rounded-[4px] bg-surface-subtle space-y-2">
                 <span className="mono-label text-[10px]">Guiding Ethos</span>
                 <p className="text-xs text-text-primary italic leading-relaxed">
                   "Every visual element should have an architectural rationale. When code is clean and interfaces are clear, user trust follows naturally."
