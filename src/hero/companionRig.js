@@ -1,21 +1,10 @@
 import * as THREE from "three";
 
-// The companion, built in character units: feet at y = 0, top of the head at y = 1.
-// Companion.jsx scales it to the headline and poses it every frame.
-//
-//   root (position, scale) ─ shadow
-//   └ facing (yaw) ─ body (offset for crouch and bob)
-//                    ├ skinned pebble body: hips ─ chest ─ head bones
-//                    │    chest: arms (shoulder ─ elbow ─ hand) · head: eyes
-//                    └ legs (hip ─ knee ─ foot)
-
 const BODY = { centerY: 0.585, radiusY: 0.415, radiusX: 0.3, depth: 0.88 };
 export const HIP_HEIGHT = 0.255;
 export const LEG_SEGMENT = 0.11;
 export const FOOT_HEIGHT = 0.035;
 
-// A pebble: an egg-shaped lathe, fuller towards the base, skinned to three spine bones so it
-// can lean, squash, stretch and turn its head.
 function createBodyGeometry() {
   const profile = [];
   const steps = 40;
@@ -27,7 +16,6 @@ function createBodyGeometry() {
   const geometry = new THREE.LatheGeometry(profile, 48);
   geometry.scale(1, 1, BODY.depth);
 
-  // Bone indices: 1 hips, 2 chest, 3 head; each vertex blends the two nearest
   const position = geometry.attributes.position;
   const skinIndex = new Uint16Array(position.count * 4);
   const skinWeight = new Float32Array(position.count * 4);
@@ -43,7 +31,6 @@ function createBodyGeometry() {
   return geometry;
 }
 
-// A capsule hanging down from its parent joint, `length` between the cap centres.
 function limb(length, radius, material) {
   const geometry = new THREE.CapsuleGeometry(radius, length, 6, 12);
   geometry.translate(0, -length / 2, 0);
@@ -82,7 +69,6 @@ function createLeg(side, material) {
   return { side, hip, knee, foot };
 }
 
-// Glossy painted eyes on the body's surface; the glint squashes with the eye when it blinks.
 function createEye(side, eyeMaterial, glintMaterial) {
   const eye = new THREE.Group();
   eye.position.set(side * 0.115, -0.025, 0.222);
@@ -146,7 +132,6 @@ export function createCompanionRig() {
   const legs = [createLeg(1, materials.body), createLeg(-1, materials.body)];
   legs.forEach((leg) => body.add(leg.hip));
 
-  // A soft contact shadow facing the camera, outside the yaw so it never foreshortens
   const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), materials.shadow);
   shadow.scale.set(0.78, 0.11, 1);
   shadow.position.z = -0.05;

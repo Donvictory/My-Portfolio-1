@@ -3,23 +3,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Magnetic docking for cards. A card enters floating above its place, tethered to two anchor
-// pins by thin cables. After a short hover, a magnetic pull ramps up and draws it home: it
-// accelerates smoothly, tilts as it travels, overshoots, dips below its place, rebounds and
-// settles, with a small rotational wobble from its own weight. The motion is a simulated
-// damped spring (not an eased tween), and each card gets its own delay, stiffness and damping
-// so a grid never lands in lockstep. The cables flex while the card moves (they sag when it is
-// close to the anchors, pull straight when it overshoots) and fade once it is still.
-// Leaving the viewport lifts the card again, so it docks every time it comes back into view.
-
-const CABLE_LENGTH = 104; // anchor to card top once docked (px)
-const PULL_RAMP = 0.4; // seconds for the magnetic pull to reach full strength
-const STEP = 1 / 240; // physics sub-step (s)
+const CABLE_LENGTH = 104;
+const PULL_RAMP = 0.4;
+const STEP = 1 / 240;
 const ROTATION_STIFFNESS = 260;
 const ROTATION_DAMPING = 2 * 0.3 * Math.sqrt(ROTATION_STIFFNESS);
 const SVG_NS = "http://www.w3.org/2000/svg";
 
-// Repeatable per-card variety (the same card always lands the same way)
 const vary = (seed, min, max) => {
   const s = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
   return min + (s - Math.floor(s)) * (max - min);
@@ -30,7 +20,6 @@ const smoothstep = (t) => {
   return x * x * (3 - 2 * x);
 };
 
-// One cable layer per card container, shared by its cards
 const layers = new Map();
 
 function acquireLayer(parent) {
@@ -67,7 +56,6 @@ function createDock(card, index) {
     lift: vary(seed + 3, 64, 86),
     drift: vary(seed + 4, -12, 12),
     tilt: side * vary(seed + 5, 1.6, 3),
-    // How strongly vertical speed tips the card: the source of the wobble while it bounces
     couple: -side * vary(seed + 6, 0.35, 0.6),
   };
 
@@ -85,7 +73,7 @@ function createDock(card, index) {
   svg.append(group);
 
   const s = { phase: "hidden", delay: 0, time: 0, pullTime: 0, x: 0, y: 0, r: 0, vx: 0, vy: 0, vr: 0 };
-  let box = null; // the card's docked position within its container
+  let box = null;
   let fade = null;
 
   const render = () => {
@@ -97,15 +85,12 @@ function createDock(card, index) {
     const centerX = box.left + box.width / 2 + s.x;
     const centerY = box.top + box.height / 2 + s.y;
     [-1, 1].forEach((end, i) => {
-      // Anchor fixed above the card's place; the cable end rides the card's (rotated) top edge
       const anchorX = box.left + box.width * (i === 0 ? 0.22 : 0.78);
       const anchorY = box.top - CABLE_LENGTH;
       const localX = end * box.width * 0.28;
       const localY = -box.height / 2;
       const endX = centerX + localX * cos - localY * sin;
       const endY = centerY + localX * sin + localY * cos;
-      // Slack while the card is close to its anchors makes the cable sag; it lags behind
-      // sideways motion, and pulls straight when the card overshoots
       const slack = Math.max(0, CABLE_LENGTH - Math.hypot(endX - anchorX, endY - anchorY));
       const sag = Math.min(36, slack * 0.4 + Math.abs(s.vx) * 0.012);
       const lag = Math.max(-18, Math.min(18, -s.vx * 0.02));
@@ -127,7 +112,6 @@ function createDock(card, index) {
     get active() {
       return s.phase === "floating" || s.phase === "pulling";
     },
-    // `order`: position among the cards entering together, which staggers their landings
     start(order) {
       fade?.kill();
       box = { left: card.offsetLeft, top: card.offsetTop, width: card.offsetWidth, height: card.offsetHeight };
@@ -146,7 +130,6 @@ function createDock(card, index) {
     step(dt) {
       s.time += dt;
       if (s.phase === "floating") {
-        // Hovering in place, gently bobbing, until the pull begins
         const bob = s.time * 2.4 + seed;
         s.y = -params.lift + Math.sin(bob) * 2.5;
         s.vy = Math.cos(bob) * 2.5 * 2.4;
@@ -159,7 +142,6 @@ function createDock(card, index) {
       const steps = Math.ceil(dt / STEP);
       const h = dt / steps;
       for (let i = 0; i < steps; i++) {
-        // The pull strengthens over PULL_RAMP, so the card accelerates smoothly off its hover
         const k = params.stiffness * smoothstep(s.pullTime / PULL_RAMP);
         s.vy += (-k * s.y - damping * s.vy) * h;
         s.vx += (-k * 1.3 * s.x - damping * 1.15 * s.vx) * h;
@@ -195,7 +177,6 @@ function createDock(card, index) {
   };
 }
 
-// Docks `cards` magnetically as they scroll into view. Returns a cleanup.
 export function dockCards(cards, { start = "top 88%", end = "bottom 8%" } = {}) {
   if (!cards.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return () => {};
 

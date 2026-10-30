@@ -4,9 +4,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Returns a getter for scroll progress measured in keyframes: 0 at the top of the page,
-// i when section i's top reaches mid-viewport, and sectionIds.length at the page end.
-// ScrollTrigger only supplies the anchor positions, which App's refresh() calls keep current.
 export function useScrollProgress(sectionIds) {
   const triggers = useRef([]);
 

@@ -7,9 +7,8 @@ import { KEYFRAMES, SECTION_IDS } from "./cameraPath";
 import { SCENE_PALETTES, useDocumentTheme, usePrefersReducedMotion } from "./sceneTheme";
 import { useScrollProgress } from "./useScrollProgress";
 
-const THEME_LAMBDA = 6; // ~0.4s, close to the page's own background transition
+const THEME_LAMBDA = 6;
 
-// The page stays fully usable without WebGL, so a failed scene simply renders nothing.
 class SceneBoundary extends Component {
   state = { failed: false };
 
@@ -22,7 +21,6 @@ class SceneBoundary extends Component {
   }
 }
 
-// Owns everything theme-dependent (fog, lights, materials) and eases it toward the active palette.
 function SceneEnvironment({ theme, reducedMotion, progressRef }) {
   const fog = useRef();
   const hemi = useRef();
@@ -42,7 +40,6 @@ function SceneEnvironment({ theme, reducedMotion, progressRef }) {
 
   useFrame((_, delta) => {
     const palette = SCENE_PALETTES[theme];
-    // Snap on the first frame so the scene never fades in from the wrong palette.
     const blend = synced.current ? 1 - Math.exp(-THEME_LAMBDA * Math.min(delta, 0.1)) : 1;
     synced.current = true;
 
@@ -75,7 +72,6 @@ function Scene({ layerRef, getProgress }) {
   const reducedMotion = usePrefersReducedMotion();
   const progressRef = useRef(null);
 
-  // CameraRig mounts first so its frame callback updates progress before the sculpture reads it.
   return (
     <>
       <CameraRig
@@ -96,7 +92,6 @@ export default function SceneCanvas() {
   return (
     <div ref={layerRef} className="scene-layer" aria-hidden="true">
       <SceneBoundary>
-        {/* flat: no tone mapping, so fog and page --bg resolve to the exact same colour */}
         <Canvas
           flat
           dpr={[1, 1.5]}

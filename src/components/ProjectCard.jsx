@@ -7,11 +7,8 @@ const ProjectCard = ({ project, onClick }) => {
       className="project-card minimal-card flex flex-col justify-between overflow-hidden group cursor-pointer"
       onClick={() => onClick(project)}
     >
-      {/* Browser Showcase Header & Media */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-subtle">
 
-
-        {/* Project Thumbnail */}
         <img
           src={project.image}
           alt={project.title}
@@ -19,14 +16,10 @@ const ProjectCard = ({ project, onClick }) => {
           loading="lazy"
         />
 
-        {/* Ambient Gradient on Image Bottom */}
-
       </div>
 
-      {/* Content Section */}
       <div className="p-6 sm:p-7 flex flex-col flex-grow justify-between gap-6">
         <div className="space-y-4">
-          {/* Title & Description */}
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-2">
               <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary group-hover:text-text-primary transition-colors">
@@ -43,7 +36,6 @@ const ProjectCard = ({ project, onClick }) => {
           </div>
         </div>
 
-        {/* Action Controls */}
         <div
           className="pt-2 flex items-center justify-between gap-3"
           onClick={(e) => e.stopPropagation()}
