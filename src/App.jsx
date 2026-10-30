@@ -26,7 +26,7 @@ import ProjectModal from "./components/ProjectModal";
 import HeroIntro from "./hero/HeroIntro";
 import HeroWords from "./hero/HeroWords";
 import { getHeroIntroMode, hidesHeadline } from "./hero/introTimeline";
-import { dockCards } from "./motion/magneticDock";
+import { springDropCards } from "./motion/springDrop";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -75,7 +75,7 @@ function App() {
 
   // GSAP Animations with ScrollTrigger
   useEffect(() => {
-    const dockCleanups = [];
+    const springCleanups = [];
     const ctx = gsap.context(() => {
       // 1. Hero Reveal (Initial mount and scroll in/out)
       const heroElements = gsap.utils.toArray(".hero-anim");
@@ -165,8 +165,8 @@ function App() {
         });
       }
 
-      // Discipline cards dock magnetically
-      dockCleanups.push(dockCards(gsap.utils.toArray(".capability-card")));
+      // Discipline cards drop in on springs
+      springCleanups.push(springDropCards(gsap.utils.toArray(".capability-card")));
 
       // 3. About Section Reveal
       const aboutElements = gsap.utils.toArray(".about-anim");
@@ -256,10 +256,10 @@ function App() {
         });
       }
 
-      // Contact cards and the About ethos card dock magnetically
-      dockCleanups.push(
-        dockCards(gsap.utils.toArray(".contact-anim"), { start: "top 90%", end: "bottom 5%" }),
-        dockCards(gsap.utils.toArray(".ethos-card"), { start: "top 90%" })
+      // Contact cards and the About ethos card drop in on springs
+      springCleanups.push(
+        springDropCards(gsap.utils.toArray(".contact-anim"), { start: "top 90%", end: "bottom 5%", stagger: 0.1 }),
+        springDropCards(gsap.utils.toArray(".ethos-card"), { start: "top 90%" })
       );
 
       // Force calculate accurate scroll triggers after DOM render
@@ -282,7 +282,7 @@ function App() {
     return () => {
       if (resizeRaf) cancelAnimationFrame(resizeRaf);
       resizeObserver.disconnect();
-      dockCleanups.forEach((cleanup) => cleanup());
+      springCleanups.forEach((cleanup) => cleanup());
       ctx.revert();
     };
   }, []);
@@ -470,7 +470,7 @@ function App() {
             </h1>
 
             <p className="hero-anim hero-support text-base sm:text-lg text-text-secondary leading-relaxed max-w-3xl font-normal">
-              Frontend Developer specializing in React and Next.js, combining analytical thinking with a user-focused approach to build scalable, pixel-accurate web applications. Experienced in translating product requirements and designs into clean interfaces, maintainable architecture, and reliable user experiences.
+              Software Developer specializing in React and Next.js, combining analytical thinking with a user-focused approach to build scalable, pixel-accurate web applications. Experienced in translating product requirements and designs into clean interfaces, maintainable architecture, and reliable user experiences.
             </p>
           </div>
 
