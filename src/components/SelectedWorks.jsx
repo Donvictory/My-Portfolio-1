@@ -41,7 +41,7 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
   }, []);
 
   useEffect(() => {
-    let releaseCards = () => {};
+    let releaseCards = () => { };
     const ctx = gsap.context(() => {
       gsap.set(".works-header-anim", { opacity: 0, y: 20 });
       ScrollTrigger.create({
@@ -154,8 +154,8 @@ const SelectedWorks = ({ projects, onSelectProject }) => {
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
             Projects
           </h2>
-          <p className="text-xs sm:text-sm text-text-secondary">
-            Production web platforms, client solutions, and open-source software.
+          <p className="text-xs sm:text-sm text-text-secondary lg:w-[500px]">
+            A collection of projects built for clients, volunteer initiatives, hackathons, and personal practice.
           </p>
         </div>
 

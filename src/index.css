@@ -17,7 +17,6 @@
   --badge-bg: #ebe5d9;
   --card-shadow: 0 4px 20px -2px rgba(48, 38, 22, 0.06);
   --card-shadow-hover: 0 20px 30px -10px rgba(48, 38, 22, 0.1);
-  --grid-line: rgba(61, 55, 46, 0.055);
 }
 
 :root.dark {
@@ -31,7 +30,6 @@
   --text-primary: #f5f2ec;
   --text-secondary: #a8a299;
   --text-tertiary: #77716a;
-  --grid-line: rgba(255, 248, 235, 0.03);
   --accent: #f5f2ec;
   --accent-contrast: #121110;
   --accent-glow: rgba(255, 255, 255, 0.04);
@@ -56,6 +54,7 @@
   --color-accent-glow: var(--accent-glow);
   --color-badge-bg: var(--badge-bg);
 
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -77,27 +76,7 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     line-height: 1.6;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.032 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperGrain)'/%3E%3C/svg%3E");
-    background-size: 256px 256px;
-    background-attachment: fixed;
     transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  :root.dark body {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperGrain)'/%3E%3C/svg%3E");
-  }
-
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    pointer-events: none;
-    background-image:
-      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-    background-size: 96px 96px;
-    mask-image: radial-gradient(ellipse 65% 70% at 72% 38%, #000 0%, transparent 72%);
   }
 
   ::selection {
@@ -107,6 +86,50 @@
 }
 
 @layer components {
+
+  /* Rolling text hover: each unit has a copy of itself one line below (::after). */
+  .roll-text {
+    display: inline-flex;
+  }
+
+  .roll-track {
+    display: inline-flex;
+    overflow: hidden;
+    line-height: 1.25;
+    padding-bottom: 0.05em;
+  }
+
+  .roll-unit {
+    position: relative;
+    display: inline-block;
+    white-space: pre;
+    transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .roll-unit::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    padding-top: 0.05em;
+  }
+
+  :is(a, button):hover .roll-unit,
+  :is(a, button):focus-visible .roll-unit {
+    transform: translateY(calc(-100% - 0.05em));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .roll-unit {
+      transition: none;
+    }
+
+    :is(a, button):hover .roll-unit,
+    :is(a, button):focus-visible .roll-unit {
+      transform: none;
+    }
+  }
+
   .hero-await .hero-word {
     opacity: 0;
   }
@@ -136,13 +159,6 @@
     fill: var(--color-bg);
     stroke: var(--color-text-tertiary);
     stroke-width: 1.25;
-  }
-
-  .hero-companion {
-    position: absolute;
-    top: 0;
-    z-index: -1;
-    pointer-events: none;
   }
 
   .scene-layer {

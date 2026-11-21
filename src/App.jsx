@@ -22,10 +22,9 @@ import "./index.css";
 import { projects } from "./data";
 import Sidebar from "./components/Sidebar";
 import SelectedWorks from "./components/SelectedWorks";
+import RollText from "./components/RollText";
 import ProjectModal from "./components/ProjectModal";
-import HeroIntro from "./hero/HeroIntro";
-import HeroWords from "./hero/HeroWords";
-import { getHeroIntroMode, hidesHeadline } from "./hero/introTimeline";
+import useHeroReveal, { getHeroRevealMode } from "./hero/useHeroReveal";
 import { dockCards } from "./motion/magneticDock";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -45,7 +44,9 @@ function App() {
   );
 
   const containerRef = useRef(null);
-  const [heroIntroMode] = useState(getHeroIntroMode);
+  const introRef = useRef(null);
+  const [heroRevealMode] = useState(getHeroRevealMode);
+  useHeroReveal(introRef, heroRevealMode);
 
   useEffect(() => {
     if (theme === "dark") {
@@ -404,7 +405,7 @@ function App() {
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium bg-surface-subtle hover:bg-surface-hover border border-border text-text-primary transition-colors"
             >
-              CV <ArrowUpRight size={13} className="text-text-tertiary" />
+              <RollText text="CV" /> <ArrowUpRight size={13} className="text-text-tertiary" />
             </a>
 
             <button
@@ -429,21 +430,26 @@ function App() {
 
         <section
           id="intro"
-          className={`relative pt-14 pb-20 sm:pt-20 sm:pb-24 space-y-10 scroll-mt-20 ${hidesHeadline(heroIntroMode) ? "hero-await" : ""}`}
+          ref={introRef}
+          className={`relative pt-14 pb-20 sm:pt-20 sm:pb-24 space-y-10 scroll-mt-20 ${heroRevealMode === "animate" ? "hero-await" : ""}`}
         >
-          {heroIntroMode !== "none" && <HeroIntro mode={heroIntroMode} />}
-
           <div className="space-y-6 max-w-4xl">
             <div className="hero-anim flex items-center gap-2">
               <span className="mono-label text-emerald-600 dark:text-emerald-400 font-semibold">Available for Work</span>
             </div>
 
-            <h1 className="hero-anim text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-text-primary leading-[1.12]">
-              <HeroWords text="Building reliable, high-performance web systems with mathematical precision and thoughtful design." />
+            <h1 className="hero-anim font-display font-normal text-5xl sm:text-7xl lg:text-8xl tracking-[-0.015em] text-text-primary leading-[1.02] [text-wrap:balance]">
+              {["Hi", "there,"].map((w) => (
+                <span key={w} className="hero-word inline-block mr-[0.22em]">{w}</span>
+              ))}
+              <span className="hero-word inline-block mr-[0.22em] italic">welcome</span>
+              {["to", "my", "page!"].map((w, i, arr) => (
+                <span key={w} className={`hero-word inline-block ${i < arr.length - 1 ? "mr-[0.22em]" : ""}`}>{w}</span>
+              ))}
             </h1>
 
             <p className="hero-anim hero-support text-base sm:text-lg text-text-secondary leading-relaxed max-w-3xl font-normal">
-              Software Developer specializing in React and Next.js, combining analytical thinking with a user-focused approach to build scalable, pixel-accurate web applications. Experienced in translating product requirements and designs into clean interfaces, maintainable architecture, and reliable user experiences.
+              I'm <span className="font-semibold text-text-primary">Donvictory</span>, a software developer building user-first products that are fast, secure, and precise in both logic and design. I work with JavaScript, React, and Next.js on the frontend, and build automated workflows that power reliable backend systems.
             </p>
           </div>
 
@@ -453,7 +459,7 @@ function App() {
               onClick={(e) => handleNavClick(e, "works")}
               className="btn-minimal-primary"
             >
-              View Projects <ArrowDown size={14} />
+              <RollText text="View Projects" mode="letters" /> <ArrowDown size={14} />
             </a>
             <a
               href="/cv.pdf"
@@ -461,7 +467,7 @@ function App() {
               rel="noopener noreferrer"
               className="btn-minimal-secondary"
             >
-              Read Resume / CV <ArrowUpRight size={14} />
+              <RollText text="Read Resume / CV" mode="letters" /> <ArrowUpRight size={14} />
             </a>
             <button
               onClick={copyEmail}
@@ -469,11 +475,11 @@ function App() {
             >
               {copied ? (
                 <>
-                  <Check size={14} className="text-emerald-500" /> Copied Email
+                  <Check size={14} className="text-emerald-500" /> <RollText text="Copied Email" />
                 </>
               ) : (
                 <>
-                  <Copy size={14} /> Copy Email
+                  <Copy size={14} /> <RollText text="Copy Email" />
                 </>
               )}
             </button>
@@ -488,29 +494,39 @@ function App() {
         <section id="expertise" className="py-10 sm:py-16 space-y-12 scroll-mt-20">
           <div className="expertise-header-anim space-y-1">
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
-              Discipline
+              Engineering Disciplines
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {[
               {
                 idx: "01",
-                title: "Frontend Architecture",
-                desc: "Modular, component-driven design in React and Next.js. Focus on strict typing, efficient state hierarchies, and predictable data mutation.",
-                stack: ["React 19", "Next.js", "TypeScript", "Vite", "Component Systems"],
+                title: "System Design & Architecture",
+                desc: "Planning how software systems should be structured, how their different parts work together, and how they can grow without becoming difficult to maintain.",
+                label: "Areas of focus",
+                stack: ["System Design", "Software Architecture", "Scalability", "Modular Design", "Data Modelling"],
               },
               {
                 idx: "02",
-                title: "Interaction & UI Engineering",
-                desc: "Responsive web styling using modern CSS and Tailwind, enhanced with intentional micro-interactions and strict accessibility standards.",
-                stack: ["Tailwind CSS", "Framer Motion", "Vanilla CSS", "WCAG AA"],
+                title: "Frontend Development",
+                desc: "Building responsive and accessible interfaces with reusable components, smooth interactions, and a focus on performance and user experience.",
+                label: "Technologies",
+                stack: ["React 19", "Next.js", "TypeScript", "Vite", "Tailwind CSS", "Framer Motion", "Zustand", "Component Design", "WCAG AA"],
               },
               {
                 idx: "03",
-                title: "Data Flow & API Integration",
-                desc: "Connecting user interfaces with backend RESTful services, WebExtensions APIs, caching patterns, and optimistic UI updates.",
-                stack: ["REST APIs", "Async Patterns", "WebExtensions", "Browser Storage"],
+                title: "Backend Development",
+                desc: "Building APIs, server-side applications, and databases that handle application data, business logic, authentication, and communication between systems.",
+                label: "Technologies",
+                stack: ["Node.js", "Express.js", "PostgreSQL", "REST APIs", "Database Design", "API Security"],
+              },
+              {
+                idx: "04",
+                title: "AI-Assisted Backend Development",
+                desc: "Using AI tools to plan and build backend systems, set up databases, create APIs, fix bugs, and test implementations while understanding how everything works behind the scenes.",
+                label: "Areas of focus",
+                stack: ["AI-Assisted Development", "Backend Setup", "API Development", "Database Configuration", "AI Pair Programming", "Debugging & Testing"],
               },
             ].map((item) => (
               <div
@@ -526,15 +542,18 @@ function App() {
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-1.5 pt-2">
-                  {item.stack.map((tag) => (
-                    <span
-                      key={tag}
-                      className="font-mono text-[10px] px-2 py-0.5 rounded-[4px] bg-surface-subtle text-text-secondary"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                <div className="space-y-2 pt-2">
+                  <span className="mono-label text-[10px]">{item.label}</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {item.stack.map((tag) => (
+                      <span
+                        key={tag}
+                        className="font-mono text-[10px] px-2 py-0.5 rounded-[4px] bg-surface-subtle text-text-secondary"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
@@ -544,7 +563,7 @@ function App() {
         <section id="about" className="py-16 sm:py-24 space-y-12 scroll-mt-20">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14 items-start">
             <div className="about-anim md:col-span-4 space-y-3">
-              <div className="aspect-[4/5] rounded-[4px] overflow-hidden bg-surface-subtle shadow-sm">
+              <div className="aspect-square w-full max-w-[280px] mx-auto md:mx-0 rounded-full overflow-hidden bg-surface-subtle shadow-sm">
                 <img
                   src="/projects/about-pic.jpeg"
                   alt="Donvictory Adewumi"
@@ -556,16 +575,26 @@ function App() {
             <div className="about-anim md:col-span-8 space-y-6">
               <div className="space-y-1.5">
                 <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
-                  Engineering with Purpose
+                  A Little About Me
                 </h2>
               </div>
 
               <div className="space-y-4 text-text-secondary text-sm sm:text-base leading-relaxed">
                 <p>
-                  I began programming driven by a passion for decentralized technology and digital infrastructure. As I built deeper into software, I discovered that the frontend is where engineering logic meets human behavior.
+                  I got into programming through a passion for decentralized technology and digital infrastructure. The deeper I went into software, the more I realized that the best products are the ones that truly understand the people using them.
                 </p>
                 <p>
-                  My goal on every project is simple: create web software that is fast, resilient, accessible, and structured to scale seamlessly over time.
+                  Before building software full-time, I worked as a customer experience agent. Being on the other side of the product, hearing what frustrated users and what made them stay, shaped how I build today. I approach every product from a user-first perspective.
+                </p>
+                <p>
+                  I design thoughtful, intuitive interfaces that never leave users wondering what to do next, and I make sure everything behind them is fully optimized for performance. To me, a great product feels effortless to use and is fast and reliable under the hood.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold text-text-primary">Beyond the code</h3>
+                <p className="text-text-secondary text-sm sm:text-base leading-relaxed">
+                  When I'm not writing code or building products, you'll find me playing the bass guitar, playing sports, or at the gym.
                 </p>
               </div>
 
@@ -610,11 +639,11 @@ function App() {
                 >
                   {copied ? (
                     <>
-                      <Check size={13} className="text-emerald-400" /> Copied!
+                      <Check size={13} className="text-emerald-400" /> <RollText text="Copied!" />
                     </>
                   ) : (
                     <>
-                      <Copy size={13} /> Copy Email
+                      <Copy size={13} /> <RollText text="Copy Email" />
                     </>
                   )}
                 </button>
@@ -622,7 +651,7 @@ function App() {
                   href="mailto:donvictoryadewumi4@gmail.com"
                   className="btn-minimal-secondary !text-xs !py-2 !rounded-[4px] flex-1 justify-center"
                 >
-                  Send Email <ArrowUpRight size={13} />
+                  <RollText text="Send Email" mode="letters" /> <ArrowUpRight size={13} />
                 </a>
               </div>
             </div>
@@ -647,7 +676,7 @@ function App() {
                   rel="noopener noreferrer"
                   className="btn-minimal-primary !text-xs !py-2 !rounded-[4px] flex-1 justify-center bg-emerald-700 hover:bg-emerald-800 text-white border-none"
                 >
-                  <MessageCircle size={13} /> Chat on WhatsApp
+                  <MessageCircle size={13} /> <RollText text="Chat on WhatsApp" mode="letters" />
                 </a>
                 <button
                   onClick={copyPhone}
@@ -655,11 +684,11 @@ function App() {
                 >
                   {phoneCopied ? (
                     <>
-                      <Check size={13} className="text-emerald-400" /> Copied
+                      <Check size={13} className="text-emerald-400" /> <RollText text="Copied" />
                     </>
                   ) : (
                     <>
-                      <Phone size={13} /> Copy Number
+                      <Phone size={13} /> <RollText text="Copy Number" />
                     </>
                   )}
                 </button>

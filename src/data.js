@@ -2,6 +2,7 @@ export const projects = [
   {
     id: 1,
     title: "PropertyJar Realty",
+    role: "Full-stack Developer",
     tags: ["next.js", "react", "firebase", "tailwind", "framer-motion", "typescript"],
 
     impact:
